@@ -51,7 +51,7 @@ ble pl
 LDFLAGS=' '; export LDFLAGS
 %configure2_13 \
 	--with-libs="%{_libdir}" \
-	--with-includes="/usr/include/js %{PGINSTDIR}/include %{PGINCDIR}/server %{PGINCDIR}/internal" \
+	--with-includes="%{_includedir}/js %{PGINSTDIR}/include %{PGINCDIR}/server %{PGINCDIR}/internal" \
 	--with-postgresql="%{PGINSTDIR}" \
 	--with-postgresql-inc="%{PGINCDIR}" \
 	--with-apachectl="%{_sbindir}/httpd " \
