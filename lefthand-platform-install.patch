@@ -1,6 +1,6 @@
 diff -urN co.orig/coffice/Makefile.in co/coffice/Makefile.in
 --- co.orig/coffice/Makefile.in	Thu Jan  9 15:54:02 2003
-+++ co/coffice/Makefile.in	Wed Mar 12 15:15:05 2003
++++ co/coffice/Makefile.in	Tue Mar 18 13:43:39 2003
 @@ -48,7 +48,6 @@
  #   install the DSO file into the Apache installation
  #   and activate it in the Apache configuration
@@ -15,3 +15,54 @@ diff -urN co.orig/coffice/Makefile.in co/coffice/Makefile.in
  reload: install
 -	$(MAKE) restart
  
+diff -urN co.orig/comodules/Makefile.rules.in co/comodules/Makefile.rules.in
+--- co.orig/comodules/Makefile.rules.in	Tue Mar 18 13:42:56 2003
++++ co/comodules/Makefile.rules.in	Tue Mar 18 13:43:44 2003
+@@ -13,6 +13,8 @@
+ 
+ sql_dir=${top_srcdir}/sql
+ doc_dir=${top_srcdir}/http_root/doc
++sql_dir2=/sql
++doc_dir2=/http_root/doc
+ mod_srcdir=${top_srcdir}/comodules
+ includedir=${top_srcdir}/include
+ temp_tools_dir=${top_srcdir}/template-tools
+@@ -76,11 +78,11 @@
+ 	gcc -E -C -P -x 'c' $(CPPFLAGS) $(TCPPFLAGS) $(INCLUDES) -o $@ $<
+ 
+ data: $(CONAME)_init.i
+-	install -d $(DESTDIR)${sql_dir}
++	install -d $(DESTDIR)${sql_dir2}
+ 	#perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(DATA_TEMPL) $(CONAME)_init.i
+ 	perl -I${temp_tools_dir} $(DATA_TEMPL) $(CONAME)_init.i
+ 	@chmod +x co_set*.pl 2>/dev/null || echo 'No data generated'
+-	@cp co_set*.pl $(DESTDIR)${sql_dir} 2>/dev/null || :
++	@cp co_set*.pl $(DESTDIR)${sql_dir2} 2>/dev/null || :
+ 
+ fsql: $(FSQLSO)
+ 	if test "$(FSQLSO)" ; then \
+@@ -98,10 +100,10 @@
+ 	touch $(CONAME)_init.t
+ 
+ install-sql: $(CONAME).i $(SQL_TEMPL) $(JEEVESCUSTOMLIBS) data
+-	install -d $(DESTDIR)${sql_dir}
++	install -d $(DESTDIR)${sql_dir2}
+ 	#perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(SQL_TEMPL) $(CONAME).i
+ 	perl -I${temp_tools_dir} $(SQL_TEMPL) $(CONAME).i
+-	@(cp co_*.sql $(DESTDIR)${sql_dir} || echo 'No SQL found')
++	@(cp co_*.sql $(DESTDIR)${sql_dir2} || echo 'No SQL found')
+ 
+ install-doc: $(CONAME).i $(DOC_TEMPL) $(JEEVESCUSTOMLIBS)
+ 	if [ -d "${doc_dir}/main_classes/${CONAME}" ] ; then \
+@@ -109,9 +111,9 @@
+ 	else \
+ 	mkdir ${doc_dir}/main_classes/${CONAME} ; \
+ 	fi
+-	install -d $(DESTDIR)${doc_dir}
++	install -d $(DESTDIR)${doc_dir2}
+ 	perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(DOC_TEMPL) $(CONAME).i
+-	@(mv *.doc.html $(DESTDIR)${doc_dir}/main_classes/${CONAME} || echo 'No docs found')
++	@(mv *.doc.html $(DESTDIR)${doc_dir2}/main_classes/${CONAME} || echo 'No docs found')
+ 
+ install-js:
+ 	install -d $(DESTDIR)${js_dir}
