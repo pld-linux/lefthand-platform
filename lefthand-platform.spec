@@ -13,7 +13,7 @@ Summary:	LeftHand 1.0 Platform
 Summary(pl):	Platforma LeftHand 1.0
 Name:		lefthand-platform
 Version:	1.0.2
-Release:	0.8
+Release:	0.9
 License:	GPL
 Group:		niewiem
 Source0:	lefthand-%{version}.tar.gz
@@ -23,7 +23,7 @@ Patch2:		%{name}-comments.patch
 Patch3:		%{name}-install.patch
 Patch4:		%{name}-ac_fix_postgres.patch
 Patch5:		%{name}-mod_coffice.patch
-Patch6:		%{name}-postgresql.patch
+Patch6:		%{name}-postgresql.patch.gz
 URL:		http://www.lefthand.com.pl/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -80,10 +80,14 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C comodules install DESTDIR="$RPM_BUILD_ROOT/"
 %{__make} -C coffice install DESTDIR="$RPM_BUILD_ROOT/"
 
-install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_includedir}/co}
+install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_includedir}/co,/opt/co/html,/opt/co/datafiles/sys/attachment,/opt/co/datafiles/sys/text_document}
 install coffice/mod_coffice.so $RPM_BUILD_ROOT%{_pkglibdir}
 install config/co.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{arname}.conf
 install include/*.h $RPM_BUILD_ROOT%{_includedir}/co
+cp -a http_root $RPM_BUILD_ROOT/opt/co/html
+cd $RPM_BUILD_ROOT/etc/httpd
+ln -sf ../../opt/co/html co_root
+ln -sf ../../opt/co/datafiles co_data
 
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
@@ -108,7 +112,7 @@ if [ "$1" = "0" ]; then
 fi
 
 %clean
-#rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
@@ -116,7 +120,12 @@ fi
 %attr(755,postgres,postgres) %{_libdir}/co/fsql_catalog.so
 %{_sysconfdir}/co_javascript/*.js
 %{_sysconfdir}/co_modules/*.so
+%{_sysconfdir}/co_root
+%{_sysconfdir}/co_data
 %{_pkglibdir}/*.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{arname}.conf
 /sql
 %{_includedir}/co
+%attr(755,http,http) /opt/co/datafiles/sys/attachment
+%attr(755,http,http) /opt/co/datafiles/sys/text_document
+/opt/co/html
