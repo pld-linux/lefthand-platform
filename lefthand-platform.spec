@@ -84,7 +84,7 @@ install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_includedir}/co,/opt/co/html,/opt/co/
 install coffice/mod_coffice.so $RPM_BUILD_ROOT%{_pkglibdir}
 install config/co.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{arname}.conf
 install include/*.h $RPM_BUILD_ROOT%{_includedir}/co
-cp -a http_root $RPM_BUILD_ROOT/opt/co/html
+cp -a http_root/* $RPM_BUILD_ROOT/opt/co/html
 cd $RPM_BUILD_ROOT/etc/httpd
 ln -sf ../../opt/co/html co_root
 ln -sf ../../opt/co/datafiles co_data
