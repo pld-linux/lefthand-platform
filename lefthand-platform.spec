@@ -2,6 +2,8 @@
 # - better patch to find postgresql version by configure
 # - desc and group
 # - move some files from /etc/httpd
+# - FHS compliance (what is /sql ???)
+# - switch to standard postgresql
 
 %define         arname          mod_coffice
 %define         mod_name        coffice
@@ -25,13 +27,13 @@ Patch4:		%{name}-ac_fix_postgres.patch
 Patch5:		%{name}-mod_coffice.patch
 Patch6:		%{name}-postgresql.patch
 URL:		http://www.lefthand.com.pl/
+BuildRequires:	apache(EAPI)-devel >= 1.3.12
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	texinfo
 BuildRequires:	js-devel
-BuildRequires:	apache(EAPI)-devel >= 1.3.12
 BuildRequires:	postgresql-devel
 BuildRequires:	postgresql-backend-devel
+BuildRequires:	texinfo
 PreReq:		apache(EAPI) >= 1.3.12
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
@@ -39,7 +41,11 @@ Requires(preun):	fileutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-ble
+LeftHand Platform 1.0 is a set of libraries, utilities and
+metodologies designed for creating applications like Firma. The
+platform provides features like database access, Internet
+communication layer, users and roles system and security control
+mechanisms.
 
 %description -l pl
 Platforma LeftHand 1.0 - zestaw bibliotek, narzêdzi i metodologii do
@@ -89,6 +95,9 @@ cd $RPM_BUILD_ROOT/etc/httpd
 ln -sf ../../opt/co/html co_root
 ln -sf ../../opt/co/datafiles co_data
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 if [ -f %{_sysconfdir}/httpd.conf ] && \
@@ -111,21 +120,25 @@ if [ "$1" = "0" ]; then
         fi
 fi
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(644,root,root,755)
 #%doc sql
+%dir %{_libdir}/co
 %attr(755,postgres,postgres) %{_libdir}/co/fsql_catalog.so
+%dir %{_sysconfdir}/co_javascript
 %{_sysconfdir}/co_javascript/*.js
+%dir %{_sysconfdir}/co_modules
 %{_sysconfdir}/co_modules/*.so
 %{_sysconfdir}/co_root
 %{_sysconfdir}/co_data
 %{_pkglibdir}/*.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{arname}.conf
+# FIXME: FHS
 /sql
 %{_includedir}/co
+%dir /opt/co
+%dir /opt/co/datafiles
+%dir /opt/co/datafiles/sys
 %attr(755,http,http) /opt/co/datafiles/sys/attachment
 %attr(755,http,http) /opt/co/datafiles/sys/text_document
 /opt/co/html
