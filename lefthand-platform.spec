@@ -1,10 +1,6 @@
 # TODO:
 # - summary and desc and group
 # - patch mod_coffice to work properly with our apache (auth)
-
-%define		PGINSTDIR	/usr
-%define		PGINCDIR	/usr/include/pgsql
-
 %define         arname          mod_coffice
 %define         mod_name        coffice
 %define         apxs            /usr/sbin/apxs
@@ -29,6 +25,8 @@ BuildRequires:	automake
 BuildRequires:	texinfo
 BuildRequires:	js-devel
 BuildRequires:	apache(EAPI)-devel >= 1.3.12
+BuildRequires:	postgresql-devel
+BuildRequires:	postgresql-backend-devel
 PreReq:		apache(EAPI) >= 1.3.12
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
@@ -52,9 +50,9 @@ ble pl
 LDFLAGS=' '; export LDFLAGS
 %configure2_13 \
 	--with-libs="%{_libdir}" \
-	--with-includes="%{_includedir}/js %{PGINSTDIR}/include %{PGINCDIR}/server %{PGINCDIR}/internal" \
-	--with-postgresql="%{PGINSTDIR}" \
-	--with-postgresql-inc="%{PGINCDIR}" \
+	--with-includes="%{_includedir}/js %{_includedir} %{_includedir}/postgresql/server %{_includedir}/postgresql/internal" \
+	--with-postgresql="%{_prefix}" \
+	--with-postgresql-inc="%{_includedir}/postgresql" \
 	--with-apachectl="%{_sbindir}/httpd " \
 	--with-apachectl="/etc/rc.d/init.d/httpd" \
 	--with-apache-libexecdir="%{_pkglibdir}"
