@@ -1,0 +1,3600 @@
+diff -urN co.orig/sql/Makefile co/sql/Makefile
+--- co.orig/sql/Makefile	Fri Feb 14 11:11:50 2003
++++ co/sql/Makefile	Thu Mar 20 13:18:02 2003
+@@ -2,8 +2,8 @@
+ #this makefile executes SQL code from .sql files
+ 
+ APACHECTL=/etc/rc.d/init.d/httpd
+-DATABASE_NAME='nobody'
+-DATABASE_CONNECTION_STRING='dbname=nobody'
++DATABASE_NAME='http'
++DATABASE_CONNECTION_STRING='dbname=http'
+ top_srcdir = ..
+ 
+ all:
+diff -urN co.orig/sql/__pre_init.noauto.in co/sql/__pre_init.noauto.in
+--- co.orig/sql/__pre_init.noauto.in	Sat Nov 30 13:44:55 2002
++++ co/sql/__pre_init.noauto.in	Thu Mar 20 13:18:02 2003
+@@ -2,7 +2,7 @@
+ !NOERROR
+  
+ CREATE FUNCTION plpgsql_call_handler () RETURNS OPAQUE AS
+-'@PGINSTDIR@/lib/pgsql/plpgsql.so' LANGUAGE 'C';
++'@PGINSTDIR@/lib/postgresql/plpgsql.so' LANGUAGE 'C';
+ !GO
+ 
+ CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'
+diff -urN co.orig/sql/co_create___session.noauto co/sql/co_create___session.noauto
+--- co.orig/sql/co_create___session.noauto	Thu Jun  8 00:18:07 2000
++++ co/sql/co_create___session.noauto	Thu Mar 20 13:17:56 2003
+@@ -13,9 +13,9 @@
+ )
+ !GO
+ 
+-GRANT all ON co_sys_session TO nobody
++GRANT all ON co_sys_session TO http
+ !GO
+-GRANT all ON co_sys_session_sqid TO nobody
++GRANT all ON co_sys_session_sqid TO http
+ !GO
+ 
+ DROP SEQUENCE co_usr_session_sqid
+@@ -31,9 +31,9 @@
+         user_id int NULL
+ )
+ !GO
+-GRANT all ON co_usr_session TO nobody
++GRANT all ON co_usr_session TO http
+ !GO
+-GRANT all ON co_usr_session_sqid TO nobody
++GRANT all ON co_usr_session_sqid TO http
+ !GO
+ 
+ DROP SEQUENCE co_sec_session_sqid
+@@ -49,7 +49,7 @@
+         user_id int NULL
+ )
+ !GO
+-GRANT all ON co_sec_session TO nobody
++GRANT all ON co_sec_session TO http
+ !GO
+-GRANT all ON co_sec_session_sqid TO nobody
++GRANT all ON co_sec_session_sqid TO http
+ !GO
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_sec_acl.sql co/sql/co_create_sec_acl.sql
+--- co.orig/sql/co_create_sec_acl.sql	Fri Jan 10 14:52:46 2003
++++ co/sql/co_create_sec_acl.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_acl_sqid start 1
+       !GO
+-      grant all on co_sec_acl_sqid to nobody
++      grant all on co_sec_acl_sqid to http
+       !GO 
+ 
+   create table co_sec_acl
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_acl to nobody
++  grant all on co_sec_acl to http
+   !GO 
+    
+     DROP INDEX co_sec_acl_inid
+diff -urN co.orig/sql/co_create_sec_acl_class.sql co/sql/co_create_sec_acl_class.sql
+--- co.orig/sql/co_create_sec_acl_class.sql	Fri Jan 10 14:52:47 2003
++++ co/sql/co_create_sec_acl_class.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_acl_class_sqid start 1
+       !GO
+-      grant all on co_sec_acl_class_sqid to nobody
++      grant all on co_sec_acl_class_sqid to http
+       !GO 
+ 
+   create table co_sec_acl_class
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_acl_class to nobody
++  grant all on co_sec_acl_class to http
+   !GO 
+    
+     DROP INDEX co_sec_acl_class_inid
+diff -urN co.orig/sql/co_create_sec_action.noauto co/sql/co_create_sec_action.noauto
+--- co.orig/sql/co_create_sec_action.noauto	Thu Jun  1 23:29:49 2000
++++ co/sql/co_create_sec_action.noauto	Thu Mar 20 13:17:56 2003
+@@ -24,9 +24,9 @@
+ )
+ !GO
+ 
+-GRANT all ON co_sec_action TO nobody
++GRANT all ON co_sec_action TO http
+ !GO
+ 
+ /* session needs access to action_squid */
+-grant all on co_sec_action_sqid to nobody
++grant all on co_sec_action_sqid to http
+ !GO
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_sec_catalog.sql co/sql/co_create_sec_catalog.sql
+--- co.orig/sql/co_create_sec_catalog.sql	Fri Jan 10 14:52:41 2003
++++ co/sql/co_create_sec_catalog.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_catalog_sqid start 1
+       !GO
+-      grant all on co_sec_catalog_sqid to nobody
++      grant all on co_sec_catalog_sqid to http
+       !GO 
+ 
+   create table co_sec_catalog
+@@ -48,7 +48,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_catalog to nobody
++  grant all on co_sec_catalog to http
+   !GO 
+    
+     DROP INDEX co_sec_catalog_inid
+diff -urN co.orig/sql/co_create_sec_catalog_root.sql co/sql/co_create_sec_catalog_root.sql
+--- co.orig/sql/co_create_sec_catalog_root.sql	Fri Jan 10 14:52:45 2003
++++ co/sql/co_create_sec_catalog_root.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_catalog_root_sqid start 1
+       !GO
+-      grant all on co_sec_catalog_root_sqid to nobody
++      grant all on co_sec_catalog_root_sqid to http
+       !GO 
+ 
+   create table co_sec_catalog_root
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_catalog_root to nobody
++  grant all on co_sec_catalog_root to http
+   !GO 
+    
+     DROP INDEX co_sec_catalog_root_inid
+diff -urN co.orig/sql/co_create_sec_catalog_type.sql co/sql/co_create_sec_catalog_type.sql
+--- co.orig/sql/co_create_sec_catalog_type.sql	Fri Jan 10 14:52:43 2003
++++ co/sql/co_create_sec_catalog_type.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_catalog_type_sqid start 1
+       !GO
+-      grant all on co_sec_catalog_type_sqid to nobody
++      grant all on co_sec_catalog_type_sqid to http
+       !GO 
+ 
+   create table co_sec_catalog_type
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_catalog_type to nobody
++  grant all on co_sec_catalog_type to http
+   !GO 
+    
+     DROP INDEX co_sec_catalog_type_inid
+diff -urN co.orig/sql/co_create_sec_clipboard.sql co/sql/co_create_sec_clipboard.sql
+--- co.orig/sql/co_create_sec_clipboard.sql	Fri Jan 10 14:52:58 2003
++++ co/sql/co_create_sec_clipboard.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_clipboard_sqid start 1
+       !GO
+-      grant all on co_sec_clipboard_sqid to nobody
++      grant all on co_sec_clipboard_sqid to http
+       !GO 
+ 
+   create table co_sec_clipboard
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_clipboard to nobody
++  grant all on co_sec_clipboard to http
+   !GO 
+    
+     DROP INDEX co_sec_clipboard_inid
+diff -urN co.orig/sql/co_create_sec_file.sql co/sql/co_create_sec_file.sql
+--- co.orig/sql/co_create_sec_file.sql	Fri Jan 10 14:52:51 2003
++++ co/sql/co_create_sec_file.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_file_sqid start 1
+       !GO
+-      grant all on co_sec_file_sqid to nobody
++      grant all on co_sec_file_sqid to http
+       !GO 
+ 
+   create table co_sec_file
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_file to nobody
++  grant all on co_sec_file to http
+   !GO 
+    
+     DROP INDEX co_sec_file_inid
+diff -urN co.orig/sql/co_create_sec_generic.sql co/sql/co_create_sec_generic.sql
+--- co.orig/sql/co_create_sec_generic.sql	Fri Jan 10 14:52:10 2003
++++ co/sql/co_create_sec_generic.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_generic_sqid start 1
+       !GO
+-      grant all on co_sec_generic_sqid to nobody
++      grant all on co_sec_generic_sqid to http
+       !GO 
+ 
+   create table co_sec_generic
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_generic to nobody
++  grant all on co_sec_generic to http
+   !GO 
+    
+     DROP INDEX co_sec_generic_inid
+diff -urN co.orig/sql/co_create_sec_generic_acl.sql co/sql/co_create_sec_generic_acl.sql
+--- co.orig/sql/co_create_sec_generic_acl.sql	Fri Jan 10 14:52:23 2003
++++ co/sql/co_create_sec_generic_acl.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_generic_acl_sqid start 1
+       !GO
+-      grant all on co_sec_generic_acl_sqid to nobody
++      grant all on co_sec_generic_acl_sqid to http
+       !GO 
+ 
+   create table co_sec_generic_acl
+@@ -30,7 +30,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_generic_acl to nobody
++  grant all on co_sec_generic_acl to http
+   !GO 
+    
+     DROP INDEX co_sec_generic_acl_inid
+diff -urN co.orig/sql/co_create_sec_generic_iacl.sql co/sql/co_create_sec_generic_iacl.sql
+--- co.orig/sql/co_create_sec_generic_iacl.sql	Fri Jan 10 14:52:28 2003
++++ co/sql/co_create_sec_generic_iacl.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_generic_iacl_sqid start 1
+       !GO
+-      grant all on co_sec_generic_iacl_sqid to nobody
++      grant all on co_sec_generic_iacl_sqid to http
+       !GO 
+ 
+   create table co_sec_generic_iacl
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_generic_iacl to nobody
++  grant all on co_sec_generic_iacl to http
+   !GO 
+    
+     DROP INDEX co_sec_generic_iacl_inid
+diff -urN co.orig/sql/co_create_sec_js_code.sql co/sql/co_create_sec_js_code.sql
+--- co.orig/sql/co_create_sec_js_code.sql	Fri Jan 10 14:53:02 2003
++++ co/sql/co_create_sec_js_code.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_js_code_sqid start 1
+       !GO
+-      grant all on co_sec_js_code_sqid to nobody
++      grant all on co_sec_js_code_sqid to http
+       !GO 
+ 
+   create table co_sec_js_code
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_js_code to nobody
++  grant all on co_sec_js_code to http
+   !GO 
+    
+     DROP INDEX co_sec_js_code_inid
+diff -urN co.orig/sql/co_create_sec_js_lib.sql co/sql/co_create_sec_js_lib.sql
+--- co.orig/sql/co_create_sec_js_lib.sql	Fri Jan 10 14:53:03 2003
++++ co/sql/co_create_sec_js_lib.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_js_lib_sqid start 1
+       !GO
+-      grant all on co_sec_js_lib_sqid to nobody
++      grant all on co_sec_js_lib_sqid to http
+       !GO 
+ 
+   create table co_sec_js_lib
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_js_lib to nobody
++  grant all on co_sec_js_lib to http
+   !GO 
+    
+     DROP INDEX co_sec_js_lib_inid
+diff -urN co.orig/sql/co_create_sec_label_class.sql co/sql/co_create_sec_label_class.sql
+--- co.orig/sql/co_create_sec_label_class.sql	Fri Jan 10 14:53:19 2003
++++ co/sql/co_create_sec_label_class.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_label_class_sqid start 1
+       !GO
+-      grant all on co_sec_label_class_sqid to nobody
++      grant all on co_sec_label_class_sqid to http
+       !GO 
+ 
+   create table co_sec_label_class
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_label_class to nobody
++  grant all on co_sec_label_class to http
+   !GO 
+    
+     DROP INDEX co_sec_label_class_inid
+diff -urN co.orig/sql/co_create_sec_label_prop.sql co/sql/co_create_sec_label_prop.sql
+--- co.orig/sql/co_create_sec_label_prop.sql	Fri Jan 10 14:53:20 2003
++++ co/sql/co_create_sec_label_prop.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_label_prop_sqid start 1
+       !GO
+-      grant all on co_sec_label_prop_sqid to nobody
++      grant all on co_sec_label_prop_sqid to http
+       !GO 
+ 
+   create table co_sec_label_prop
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_label_prop to nobody
++  grant all on co_sec_label_prop to http
+   !GO 
+    
+     DROP INDEX co_sec_label_prop_inid
+diff -urN co.orig/sql/co_create_sec_label_relation.sql co/sql/co_create_sec_label_relation.sql
+--- co.orig/sql/co_create_sec_label_relation.sql	Fri Jan 10 14:53:21 2003
++++ co/sql/co_create_sec_label_relation.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_label_relation_sqid start 1
+       !GO
+-      grant all on co_sec_label_relation_sqid to nobody
++      grant all on co_sec_label_relation_sqid to http
+       !GO 
+ 
+   create table co_sec_label_relation
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_label_relation to nobody
++  grant all on co_sec_label_relation to http
+   !GO 
+    
+     DROP INDEX co_sec_label_relation_inid
+diff -urN co.orig/sql/co_create_sec_menu.sql co/sql/co_create_sec_menu.sql
+--- co.orig/sql/co_create_sec_menu.sql	Fri Jan 10 14:53:08 2003
++++ co/sql/co_create_sec_menu.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_menu_sqid start 1
+       !GO
+-      grant all on co_sec_menu_sqid to nobody
++      grant all on co_sec_menu_sqid to http
+       !GO 
+ 
+   create table co_sec_menu
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_menu to nobody
++  grant all on co_sec_menu to http
+   !GO 
+    
+     DROP INDEX co_sec_menu_inid
+diff -urN co.orig/sql/co_create_sec_menu_action.sql co/sql/co_create_sec_menu_action.sql
+--- co.orig/sql/co_create_sec_menu_action.sql	Fri Jan 10 14:53:10 2003
++++ co/sql/co_create_sec_menu_action.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_menu_action_sqid start 1
+       !GO
+-      grant all on co_sec_menu_action_sqid to nobody
++      grant all on co_sec_menu_action_sqid to http
+       !GO 
+ 
+   create table co_sec_menu_action
+@@ -36,7 +36,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_menu_action to nobody
++  grant all on co_sec_menu_action to http
+   !GO 
+    
+     DROP INDEX co_sec_menu_action_inid
+diff -urN co.orig/sql/co_create_sec_menu_action_param.sql co/sql/co_create_sec_menu_action_param.sql
+--- co.orig/sql/co_create_sec_menu_action_param.sql	Fri Jan 10 14:53:12 2003
++++ co/sql/co_create_sec_menu_action_param.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_menu_action_param_sqid start 1
+       !GO
+-      grant all on co_sec_menu_action_param_sqid to nobody
++      grant all on co_sec_menu_action_param_sqid to http
+       !GO 
+ 
+   create table co_sec_menu_action_param
+@@ -54,7 +54,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_menu_action_param to nobody
++  grant all on co_sec_menu_action_param to http
+   !GO 
+    
+     DROP INDEX co_sec_menu_action_param_inid
+diff -urN co.orig/sql/co_create_sec_meta_class.sql co/sql/co_create_sec_meta_class.sql
+--- co.orig/sql/co_create_sec_meta_class.sql	Fri Jan 10 14:53:14 2003
++++ co/sql/co_create_sec_meta_class.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_meta_class_sqid start 1
+       !GO
+-      grant all on co_sec_meta_class_sqid to nobody
++      grant all on co_sec_meta_class_sqid to http
+       !GO 
+ 
+   create table co_sec_meta_class
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_meta_class to nobody
++  grant all on co_sec_meta_class to http
+   !GO 
+    
+     DROP INDEX co_sec_meta_class_inid
+diff -urN co.orig/sql/co_create_sec_meta_method.sql co/sql/co_create_sec_meta_method.sql
+--- co.orig/sql/co_create_sec_meta_method.sql	Fri Jan 10 14:53:15 2003
++++ co/sql/co_create_sec_meta_method.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_meta_method_sqid start 1
+       !GO
+-      grant all on co_sec_meta_method_sqid to nobody
++      grant all on co_sec_meta_method_sqid to http
+       !GO 
+ 
+   create table co_sec_meta_method
+@@ -60,7 +60,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_meta_method to nobody
++  grant all on co_sec_meta_method to http
+   !GO 
+    
+     DROP INDEX co_sec_meta_method_inid
+diff -urN co.orig/sql/co_create_sec_meta_prop.sql co/sql/co_create_sec_meta_prop.sql
+--- co.orig/sql/co_create_sec_meta_prop.sql	Fri Jan 10 14:53:17 2003
++++ co/sql/co_create_sec_meta_prop.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_meta_prop_sqid start 1
+       !GO
+-      grant all on co_sec_meta_prop_sqid to nobody
++      grant all on co_sec_meta_prop_sqid to http
+       !GO 
+ 
+   create table co_sec_meta_prop
+@@ -72,7 +72,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_meta_prop to nobody
++  grant all on co_sec_meta_prop to http
+   !GO 
+    
+     DROP INDEX co_sec_meta_prop_inid
+diff -urN co.orig/sql/co_create_sec_meta_vtable.sql co/sql/co_create_sec_meta_vtable.sql
+--- co.orig/sql/co_create_sec_meta_vtable.sql	Fri Jan 10 14:53:18 2003
++++ co/sql/co_create_sec_meta_vtable.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_meta_vtable_sqid start 1
+       !GO
+-      grant all on co_sec_meta_vtable_sqid to nobody
++      grant all on co_sec_meta_vtable_sqid to http
+       !GO 
+ 
+   create table co_sec_meta_vtable
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_meta_vtable to nobody
++  grant all on co_sec_meta_vtable to http
+   !GO 
+    
+     DROP INDEX co_sec_meta_vtable_inid
+diff -urN co.orig/sql/co_create_sec_permission.sql co/sql/co_create_sec_permission.sql
+--- co.orig/sql/co_create_sec_permission.sql	Fri Jan 10 14:53:22 2003
++++ co/sql/co_create_sec_permission.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_permission_sqid start 1
+       !GO
+-      grant all on co_sec_permission_sqid to nobody
++      grant all on co_sec_permission_sqid to http
+       !GO 
+ 
+   create table co_sec_permission
+@@ -30,7 +30,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_permission to nobody
++  grant all on co_sec_permission to http
+   !GO 
+    
+     DROP INDEX co_sec_permission_inid
+diff -urN co.orig/sql/co_create_sec_preference.sql co/sql/co_create_sec_preference.sql
+--- co.orig/sql/co_create_sec_preference.sql	Fri Jan 10 14:53:26 2003
++++ co/sql/co_create_sec_preference.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_preference_sqid start 1
+       !GO
+-      grant all on co_sec_preference_sqid to nobody
++      grant all on co_sec_preference_sqid to http
+       !GO 
+ 
+   create table co_sec_preference
+@@ -36,7 +36,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_preference to nobody
++  grant all on co_sec_preference to http
+   !GO 
+    
+     DROP INDEX co_sec_preference_inid
+diff -urN co.orig/sql/co_create_sec_profiler.sql co/sql/co_create_sec_profiler.sql
+--- co.orig/sql/co_create_sec_profiler.sql	Fri Jan 10 14:53:28 2003
++++ co/sql/co_create_sec_profiler.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_profiler_sqid start 1
+       !GO
+-      grant all on co_sec_profiler_sqid to nobody
++      grant all on co_sec_profiler_sqid to http
+       !GO 
+ 
+   create table co_sec_profiler
+@@ -36,6 +36,6 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_profiler to nobody
++  grant all on co_sec_profiler to http
+   !GO 
+   
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_sec_report.sql co/sql/co_create_sec_report.sql
+--- co.orig/sql/co_create_sec_report.sql	Fri Jan 10 14:54:42 2003
++++ co/sql/co_create_sec_report.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_report_sqid start 1
+       !GO
+-      grant all on co_sec_report_sqid to nobody
++      grant all on co_sec_report_sqid to http
+       !GO 
+ 
+   create table co_sec_report
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_report to nobody
++  grant all on co_sec_report to http
+   !GO 
+    
+     DROP INDEX co_sec_report_inid
+diff -urN co.orig/sql/co_create_sec_report_element.sql co/sql/co_create_sec_report_element.sql
+--- co.orig/sql/co_create_sec_report_element.sql	Fri Jan 10 14:54:43 2003
++++ co/sql/co_create_sec_report_element.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_report_element_sqid start 1
+       !GO
+-      grant all on co_sec_report_element_sqid to nobody
++      grant all on co_sec_report_element_sqid to http
+       !GO 
+ 
+   create table co_sec_report_element
+@@ -54,7 +54,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_report_element to nobody
++  grant all on co_sec_report_element to http
+   !GO 
+    
+     DROP INDEX co_sec_report_element_inid
+diff -urN co.orig/sql/co_create_sec_role.sql co/sql/co_create_sec_role.sql
+--- co.orig/sql/co_create_sec_role.sql	Fri Jan 10 14:53:30 2003
++++ co/sql/co_create_sec_role.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_role_sqid start 1
+       !GO
+-      grant all on co_sec_role_sqid to nobody
++      grant all on co_sec_role_sqid to http
+       !GO 
+ 
+   create table co_sec_role
+@@ -48,7 +48,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_role to nobody
++  grant all on co_sec_role to http
+   !GO 
+    
+     DROP INDEX co_sec_role_inid
+diff -urN co.orig/sql/co_create_sec_shell_command.sql co/sql/co_create_sec_shell_command.sql
+--- co.orig/sql/co_create_sec_shell_command.sql	Fri Jan 10 14:54:46 2003
++++ co/sql/co_create_sec_shell_command.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_shell_command_sqid start 1
+       !GO
+-      grant all on co_sec_shell_command_sqid to nobody
++      grant all on co_sec_shell_command_sqid to http
+       !GO 
+ 
+   create table co_sec_shell_command
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_shell_command to nobody
++  grant all on co_sec_shell_command to http
+   !GO 
+    
+     DROP INDEX co_sec_shell_command_inid
+diff -urN co.orig/sql/co_create_sec_start_page.sql co/sql/co_create_sec_start_page.sql
+--- co.orig/sql/co_create_sec_start_page.sql	Fri Jan 10 14:53:43 2003
++++ co/sql/co_create_sec_start_page.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_start_page_sqid start 1
+       !GO
+-      grant all on co_sec_start_page_sqid to nobody
++      grant all on co_sec_start_page_sqid to http
+       !GO 
+ 
+   create table co_sec_start_page
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_start_page to nobody
++  grant all on co_sec_start_page to http
+   !GO 
+    
+     DROP INDEX co_sec_start_page_inid
+diff -urN co.orig/sql/co_create_sec_user.sql co/sql/co_create_sec_user.sql
+--- co.orig/sql/co_create_sec_user.sql	Fri Jan 10 14:54:41 2003
++++ co/sql/co_create_sec_user.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sec_user_sqid start 1
+       !GO
+-      grant all on co_sec_user_sqid to nobody
++      grant all on co_sec_user_sqid to http
+       !GO 
+ 
+   create table co_sec_user
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sec_user to nobody
++  grant all on co_sec_user to http
+   !GO 
+    
+     DROP INDEX co_sec_user_inid
+diff -urN co.orig/sql/co_create_sys_action.noauto co/sql/co_create_sys_action.noauto
+--- co.orig/sql/co_create_sys_action.noauto	Thu Jun  1 23:29:07 2000
++++ co/sql/co_create_sys_action.noauto	Thu Mar 20 13:17:56 2003
+@@ -24,8 +24,8 @@
+ )
+ !GO
+ 
+-GRANT all ON co_sys_action TO nobody
++GRANT all ON co_sys_action TO http
+ !GO
+ /* session needs access to action_squid */
+-grant all on co_sys_action_sqid to nobody
++grant all on co_sys_action_sqid to http
+ !GO
+diff -urN co.orig/sql/co_create_sys_attachment.sql co/sql/co_create_sys_attachment.sql
+--- co.orig/sql/co_create_sys_attachment.sql	Fri Jan 10 14:52:54 2003
++++ co/sql/co_create_sys_attachment.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_attachment_sqid start 1
+       !GO
+-      grant all on co_sys_attachment_sqid to nobody
++      grant all on co_sys_attachment_sqid to http
+       !GO 
+ 
+   create table co_sys_attachment
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_attachment to nobody
++  grant all on co_sys_attachment to http
+   !GO 
+    
+     DROP INDEX co_sys_attachment_inid
+diff -urN co.orig/sql/co_create_sys_catalog.sql co/sql/co_create_sys_catalog.sql
+--- co.orig/sql/co_create_sys_catalog.sql	Fri Jan 10 14:52:41 2003
++++ co/sql/co_create_sys_catalog.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_catalog_sqid start 1
+       !GO
+-      grant all on co_sys_catalog_sqid to nobody
++      grant all on co_sys_catalog_sqid to http
+       !GO 
+ 
+   create table co_sys_catalog
+@@ -48,7 +48,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_catalog to nobody
++  grant all on co_sys_catalog to http
+   !GO 
+    
+     DROP INDEX co_sys_catalog_inid
+diff -urN co.orig/sql/co_create_sys_catalog_root.sql co/sql/co_create_sys_catalog_root.sql
+--- co.orig/sql/co_create_sys_catalog_root.sql	Fri Jan 10 14:52:45 2003
++++ co/sql/co_create_sys_catalog_root.sql	Thu Mar 20 13:17:56 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_catalog_root_sqid start 1
+       !GO
+-      grant all on co_sys_catalog_root_sqid to nobody
++      grant all on co_sys_catalog_root_sqid to http
+       !GO 
+ 
+   create table co_sys_catalog_root
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_catalog_root to nobody
++  grant all on co_sys_catalog_root to http
+   !GO 
+    
+     DROP INDEX co_sys_catalog_root_inid
+diff -urN co.orig/sql/co_create_sys_catalog_type.sql co/sql/co_create_sys_catalog_type.sql
+--- co.orig/sql/co_create_sys_catalog_type.sql	Fri Jan 10 14:52:43 2003
++++ co/sql/co_create_sys_catalog_type.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_catalog_type_sqid start 1
+       !GO
+-      grant all on co_sys_catalog_type_sqid to nobody
++      grant all on co_sys_catalog_type_sqid to http
+       !GO 
+ 
+   create table co_sys_catalog_type
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_catalog_type to nobody
++  grant all on co_sys_catalog_type to http
+   !GO 
+    
+     DROP INDEX co_sys_catalog_type_inid
+diff -urN co.orig/sql/co_create_sys_cevent_type.sql co/sql/co_create_sys_cevent_type.sql
+--- co.orig/sql/co_create_sys_cevent_type.sql	Fri Jan 10 14:52:55 2003
++++ co/sql/co_create_sys_cevent_type.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_cevent_type_sqid start 1
+       !GO
+-      grant all on co_sys_cevent_type_sqid to nobody
++      grant all on co_sys_cevent_type_sqid to http
+       !GO 
+ 
+   create table co_sys_cevent_type
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_cevent_type to nobody
++  grant all on co_sys_cevent_type to http
+   !GO 
+    
+     DROP INDEX co_sys_cevent_type_inid
+diff -urN co.orig/sql/co_create_sys_clipboard.sql co/sql/co_create_sys_clipboard.sql
+--- co.orig/sql/co_create_sys_clipboard.sql	Fri Jan 10 14:52:58 2003
++++ co/sql/co_create_sys_clipboard.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_clipboard_sqid start 1
+       !GO
+-      grant all on co_sys_clipboard_sqid to nobody
++      grant all on co_sys_clipboard_sqid to http
+       !GO 
+ 
+   create table co_sys_clipboard
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_clipboard to nobody
++  grant all on co_sys_clipboard to http
+   !GO 
+    
+     DROP INDEX co_sys_clipboard_inid
+diff -urN co.orig/sql/co_create_sys_expression.noauto co/sql/co_create_sys_expression.noauto
+--- co.orig/sql/co_create_sys_expression.noauto	Wed Jul 26 20:58:43 2000
++++ co/sql/co_create_sys_expression.noauto	Thu Mar 20 13:17:57 2003
+@@ -32,7 +32,7 @@
+     )
+     !GO
+ 
+-GRANT all on co_sys_expression_deps to nobody
++GRANT all on co_sys_expression_deps to http
+ !GO
+ 
+ DROP TABLE co_sys_expression_deps_r
+@@ -70,5 +70,5 @@
+     !GO
+ 
+ 
+-GRANT all on co_sys_expression_deps_r to nobody
++GRANT all on co_sys_expression_deps_r to http
+ !GO
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_sys_expression.sql co/sql/co_create_sys_expression.sql
+--- co.orig/sql/co_create_sys_expression.sql	Fri Jan 10 14:53:55 2003
++++ co/sql/co_create_sys_expression.sql	Thu Mar 20 13:17:57 2003
+@@ -29,7 +29,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_expression to nobody
++  grant all on co_sys_expression to http
+   !GO 
+    
+     DROP INDEX co_sys_expression_scrid
+diff -urN co.orig/sql/co_create_sys_expression_cell.sql co/sql/co_create_sys_expression_cell.sql
+--- co.orig/sql/co_create_sys_expression_cell.sql	Fri Jan 10 14:54:00 2003
++++ co/sql/co_create_sys_expression_cell.sql	Thu Mar 20 13:17:57 2003
+@@ -50,7 +50,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_expression_cell to nobody
++  grant all on co_sys_expression_cell to http
+   !GO 
+    
+     DROP INDEX co_sys_expression_cell_scrid
+diff -urN co.orig/sql/co_create_sys_expression_range.sql co/sql/co_create_sys_expression_range.sql
+--- co.orig/sql/co_create_sys_expression_range.sql	Fri Jan 10 14:54:07 2003
++++ co/sql/co_create_sys_expression_range.sql	Thu Mar 20 13:17:57 2003
+@@ -71,7 +71,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_expression_range to nobody
++  grant all on co_sys_expression_range to http
+   !GO 
+    
+     DROP INDEX co_sys_expression_range_scrid
+diff -urN co.orig/sql/co_create_sys_file.sql co/sql/co_create_sys_file.sql
+--- co.orig/sql/co_create_sys_file.sql	Fri Jan 10 14:52:51 2003
++++ co/sql/co_create_sys_file.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_file_sqid start 1
+       !GO
+-      grant all on co_sys_file_sqid to nobody
++      grant all on co_sys_file_sqid to http
+       !GO 
+ 
+   create table co_sys_file
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_file to nobody
++  grant all on co_sys_file to http
+   !GO 
+    
+     DROP INDEX co_sys_file_inid
+diff -urN co.orig/sql/co_create_sys_generic.sql co/sql/co_create_sys_generic.sql
+--- co.orig/sql/co_create_sys_generic.sql	Fri Jan 10 14:52:10 2003
++++ co/sql/co_create_sys_generic.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_generic_sqid start 1
+       !GO
+-      grant all on co_sys_generic_sqid to nobody
++      grant all on co_sys_generic_sqid to http
+       !GO 
+ 
+   create table co_sys_generic
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_generic to nobody
++  grant all on co_sys_generic to http
+   !GO 
+    
+     DROP INDEX co_sys_generic_inid
+diff -urN co.orig/sql/co_create_sys_generic_acl.sql co/sql/co_create_sys_generic_acl.sql
+--- co.orig/sql/co_create_sys_generic_acl.sql	Fri Jan 10 14:52:23 2003
++++ co/sql/co_create_sys_generic_acl.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_generic_acl_sqid start 1
+       !GO
+-      grant all on co_sys_generic_acl_sqid to nobody
++      grant all on co_sys_generic_acl_sqid to http
+       !GO 
+ 
+   create table co_sys_generic_acl
+@@ -30,7 +30,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_generic_acl to nobody
++  grant all on co_sys_generic_acl to http
+   !GO 
+    
+     DROP INDEX co_sys_generic_acl_inid
+diff -urN co.orig/sql/co_create_sys_generic_iacl.sql co/sql/co_create_sys_generic_iacl.sql
+--- co.orig/sql/co_create_sys_generic_iacl.sql	Fri Jan 10 14:52:28 2003
++++ co/sql/co_create_sys_generic_iacl.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_generic_iacl_sqid start 1
+       !GO
+-      grant all on co_sys_generic_iacl_sqid to nobody
++      grant all on co_sys_generic_iacl_sqid to http
+       !GO 
+ 
+   create table co_sys_generic_iacl
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_generic_iacl to nobody
++  grant all on co_sys_generic_iacl to http
+   !GO 
+    
+     DROP INDEX co_sys_generic_iacl_inid
+diff -urN co.orig/sql/co_create_sys_js_code.sql co/sql/co_create_sys_js_code.sql
+--- co.orig/sql/co_create_sys_js_code.sql	Fri Jan 10 14:53:02 2003
++++ co/sql/co_create_sys_js_code.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_js_code_sqid start 1
+       !GO
+-      grant all on co_sys_js_code_sqid to nobody
++      grant all on co_sys_js_code_sqid to http
+       !GO 
+ 
+   create table co_sys_js_code
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_js_code to nobody
++  grant all on co_sys_js_code to http
+   !GO 
+    
+     DROP INDEX co_sys_js_code_inid
+diff -urN co.orig/sql/co_create_sys_js_lib.sql co/sql/co_create_sys_js_lib.sql
+--- co.orig/sql/co_create_sys_js_lib.sql	Fri Jan 10 14:53:03 2003
++++ co/sql/co_create_sys_js_lib.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_js_lib_sqid start 1
+       !GO
+-      grant all on co_sys_js_lib_sqid to nobody
++      grant all on co_sys_js_lib_sqid to http
+       !GO 
+ 
+   create table co_sys_js_lib
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_js_lib to nobody
++  grant all on co_sys_js_lib to http
+   !GO 
+    
+     DROP INDEX co_sys_js_lib_inid
+diff -urN co.orig/sql/co_create_sys_label_class.sql co/sql/co_create_sys_label_class.sql
+--- co.orig/sql/co_create_sys_label_class.sql	Fri Jan 10 14:53:19 2003
++++ co/sql/co_create_sys_label_class.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_label_class_sqid start 1
+       !GO
+-      grant all on co_sys_label_class_sqid to nobody
++      grant all on co_sys_label_class_sqid to http
+       !GO 
+ 
+   create table co_sys_label_class
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_label_class to nobody
++  grant all on co_sys_label_class to http
+   !GO 
+    
+     DROP INDEX co_sys_label_class_inid
+diff -urN co.orig/sql/co_create_sys_label_prop.sql co/sql/co_create_sys_label_prop.sql
+--- co.orig/sql/co_create_sys_label_prop.sql	Fri Jan 10 14:53:20 2003
++++ co/sql/co_create_sys_label_prop.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_label_prop_sqid start 1
+       !GO
+-      grant all on co_sys_label_prop_sqid to nobody
++      grant all on co_sys_label_prop_sqid to http
+       !GO 
+ 
+   create table co_sys_label_prop
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_label_prop to nobody
++  grant all on co_sys_label_prop to http
+   !GO 
+    
+     DROP INDEX co_sys_label_prop_inid
+diff -urN co.orig/sql/co_create_sys_label_relation.sql co/sql/co_create_sys_label_relation.sql
+--- co.orig/sql/co_create_sys_label_relation.sql	Fri Jan 10 14:53:21 2003
++++ co/sql/co_create_sys_label_relation.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_label_relation_sqid start 1
+       !GO
+-      grant all on co_sys_label_relation_sqid to nobody
++      grant all on co_sys_label_relation_sqid to http
+       !GO 
+ 
+   create table co_sys_label_relation
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_label_relation to nobody
++  grant all on co_sys_label_relation to http
+   !GO 
+    
+     DROP INDEX co_sys_label_relation_inid
+diff -urN co.orig/sql/co_create_sys_menu.sql co/sql/co_create_sys_menu.sql
+--- co.orig/sql/co_create_sys_menu.sql	Fri Jan 10 14:53:08 2003
++++ co/sql/co_create_sys_menu.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_menu_sqid start 1
+       !GO
+-      grant all on co_sys_menu_sqid to nobody
++      grant all on co_sys_menu_sqid to http
+       !GO 
+ 
+   create table co_sys_menu
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_menu to nobody
++  grant all on co_sys_menu to http
+   !GO 
+    
+     DROP INDEX co_sys_menu_inid
+diff -urN co.orig/sql/co_create_sys_menu_action.sql co/sql/co_create_sys_menu_action.sql
+--- co.orig/sql/co_create_sys_menu_action.sql	Fri Jan 10 14:53:10 2003
++++ co/sql/co_create_sys_menu_action.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_menu_action_sqid start 1
+       !GO
+-      grant all on co_sys_menu_action_sqid to nobody
++      grant all on co_sys_menu_action_sqid to http
+       !GO 
+ 
+   create table co_sys_menu_action
+@@ -36,7 +36,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_menu_action to nobody
++  grant all on co_sys_menu_action to http
+   !GO 
+    
+     DROP INDEX co_sys_menu_action_inid
+diff -urN co.orig/sql/co_create_sys_menu_action_param.sql co/sql/co_create_sys_menu_action_param.sql
+--- co.orig/sql/co_create_sys_menu_action_param.sql	Fri Jan 10 14:53:12 2003
++++ co/sql/co_create_sys_menu_action_param.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_menu_action_param_sqid start 1
+       !GO
+-      grant all on co_sys_menu_action_param_sqid to nobody
++      grant all on co_sys_menu_action_param_sqid to http
+       !GO 
+ 
+   create table co_sys_menu_action_param
+@@ -54,7 +54,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_menu_action_param to nobody
++  grant all on co_sys_menu_action_param to http
+   !GO 
+    
+     DROP INDEX co_sys_menu_action_param_inid
+diff -urN co.orig/sql/co_create_sys_meta_class.sql co/sql/co_create_sys_meta_class.sql
+--- co.orig/sql/co_create_sys_meta_class.sql	Fri Jan 10 14:53:14 2003
++++ co/sql/co_create_sys_meta_class.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_meta_class_sqid start 1
+       !GO
+-      grant all on co_sys_meta_class_sqid to nobody
++      grant all on co_sys_meta_class_sqid to http
+       !GO 
+ 
+   create table co_sys_meta_class
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_meta_class to nobody
++  grant all on co_sys_meta_class to http
+   !GO 
+    
+     DROP INDEX co_sys_meta_class_inid
+diff -urN co.orig/sql/co_create_sys_meta_method.sql co/sql/co_create_sys_meta_method.sql
+--- co.orig/sql/co_create_sys_meta_method.sql	Fri Jan 10 14:53:15 2003
++++ co/sql/co_create_sys_meta_method.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_meta_method_sqid start 1
+       !GO
+-      grant all on co_sys_meta_method_sqid to nobody
++      grant all on co_sys_meta_method_sqid to http
+       !GO 
+ 
+   create table co_sys_meta_method
+@@ -60,7 +60,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_meta_method to nobody
++  grant all on co_sys_meta_method to http
+   !GO 
+    
+     DROP INDEX co_sys_meta_method_inid
+diff -urN co.orig/sql/co_create_sys_meta_prop.sql co/sql/co_create_sys_meta_prop.sql
+--- co.orig/sql/co_create_sys_meta_prop.sql	Fri Jan 10 14:53:17 2003
++++ co/sql/co_create_sys_meta_prop.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_meta_prop_sqid start 1
+       !GO
+-      grant all on co_sys_meta_prop_sqid to nobody
++      grant all on co_sys_meta_prop_sqid to http
+       !GO 
+ 
+   create table co_sys_meta_prop
+@@ -72,7 +72,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_meta_prop to nobody
++  grant all on co_sys_meta_prop to http
+   !GO 
+    
+     DROP INDEX co_sys_meta_prop_inid
+diff -urN co.orig/sql/co_create_sys_meta_vtable.sql co/sql/co_create_sys_meta_vtable.sql
+--- co.orig/sql/co_create_sys_meta_vtable.sql	Fri Jan 10 14:53:18 2003
++++ co/sql/co_create_sys_meta_vtable.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_meta_vtable_sqid start 1
+       !GO
+-      grant all on co_sys_meta_vtable_sqid to nobody
++      grant all on co_sys_meta_vtable_sqid to http
+       !GO 
+ 
+   create table co_sys_meta_vtable
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_meta_vtable to nobody
++  grant all on co_sys_meta_vtable to http
+   !GO 
+    
+     DROP INDEX co_sys_meta_vtable_inid
+diff -urN co.orig/sql/co_create_sys_picture.sql co/sql/co_create_sys_picture.sql
+--- co.orig/sql/co_create_sys_picture.sql	Fri Jan 10 14:53:25 2003
++++ co/sql/co_create_sys_picture.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_picture_sqid start 1
+       !GO
+-      grant all on co_sys_picture_sqid to nobody
++      grant all on co_sys_picture_sqid to http
+       !GO 
+ 
+   create table co_sys_picture
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_picture to nobody
++  grant all on co_sys_picture to http
+   !GO 
+    
+     DROP INDEX co_sys_picture_inid
+diff -urN co.orig/sql/co_create_sys_profiler.sql co/sql/co_create_sys_profiler.sql
+--- co.orig/sql/co_create_sys_profiler.sql	Fri Jan 10 14:53:28 2003
++++ co/sql/co_create_sys_profiler.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_profiler_sqid start 1
+       !GO
+-      grant all on co_sys_profiler_sqid to nobody
++      grant all on co_sys_profiler_sqid to http
+       !GO 
+ 
+   create table co_sys_profiler
+@@ -36,6 +36,6 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_profiler to nobody
++  grant all on co_sys_profiler to http
+   !GO 
+   
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_sys_report.sql co/sql/co_create_sys_report.sql
+--- co.orig/sql/co_create_sys_report.sql	Fri Jan 10 14:54:42 2003
++++ co/sql/co_create_sys_report.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_report_sqid start 1
+       !GO
+-      grant all on co_sys_report_sqid to nobody
++      grant all on co_sys_report_sqid to http
+       !GO 
+ 
+   create table co_sys_report
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_report to nobody
++  grant all on co_sys_report to http
+   !GO 
+    
+     DROP INDEX co_sys_report_inid
+diff -urN co.orig/sql/co_create_sys_report_element.sql co/sql/co_create_sys_report_element.sql
+--- co.orig/sql/co_create_sys_report_element.sql	Fri Jan 10 14:54:43 2003
++++ co/sql/co_create_sys_report_element.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_report_element_sqid start 1
+       !GO
+-      grant all on co_sys_report_element_sqid to nobody
++      grant all on co_sys_report_element_sqid to http
+       !GO 
+ 
+   create table co_sys_report_element
+@@ -54,7 +54,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_report_element to nobody
++  grant all on co_sys_report_element to http
+   !GO 
+    
+     DROP INDEX co_sys_report_element_inid
+diff -urN co.orig/sql/co_create_sys_shell_command.sql co/sql/co_create_sys_shell_command.sql
+--- co.orig/sql/co_create_sys_shell_command.sql	Fri Jan 10 14:54:46 2003
++++ co/sql/co_create_sys_shell_command.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_shell_command_sqid start 1
+       !GO
+-      grant all on co_sys_shell_command_sqid to nobody
++      grant all on co_sys_shell_command_sqid to http
+       !GO 
+ 
+   create table co_sys_shell_command
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_shell_command to nobody
++  grant all on co_sys_shell_command to http
+   !GO 
+    
+     DROP INDEX co_sys_shell_command_inid
+diff -urN co.orig/sql/co_create_sys_spreadsheet.sql co/sql/co_create_sys_spreadsheet.sql
+--- co.orig/sql/co_create_sys_spreadsheet.sql	Fri Jan 10 14:54:17 2003
++++ co/sql/co_create_sys_spreadsheet.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_spreadsheet_sqid start 1
+       !GO
+-      grant all on co_sys_spreadsheet_sqid to nobody
++      grant all on co_sys_spreadsheet_sqid to http
+       !GO 
+ 
+   create table co_sys_spreadsheet
+@@ -30,7 +30,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_spreadsheet to nobody
++  grant all on co_sys_spreadsheet to http
+   !GO 
+    
+     DROP INDEX co_sys_spreadsheet_inid
+diff -urN co.orig/sql/co_create_sys_spreadsheet_cell.sql co/sql/co_create_sys_spreadsheet_cell.sql
+--- co.orig/sql/co_create_sys_spreadsheet_cell.sql	Fri Jan 10 14:54:23 2003
++++ co/sql/co_create_sys_spreadsheet_cell.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_spreadsheet_cell_sqid start 1
+       !GO
+-      grant all on co_sys_spreadsheet_cell_sqid to nobody
++      grant all on co_sys_spreadsheet_cell_sqid to http
+       !GO 
+ 
+   create table co_sys_spreadsheet_cell
+@@ -60,7 +60,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_spreadsheet_cell to nobody
++  grant all on co_sys_spreadsheet_cell to http
+   !GO 
+    
+     DROP INDEX co_sys_spreadsheet_cell_inid
+diff -urN co.orig/sql/co_create_sys_spreadsheet_cevent.sql co/sql/co_create_sys_spreadsheet_cevent.sql
+--- co.orig/sql/co_create_sys_spreadsheet_cevent.sql	Fri Jan 10 14:54:28 2003
++++ co/sql/co_create_sys_spreadsheet_cevent.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_spreadsheet_cevent_sqid start 1
+       !GO
+-      grant all on co_sys_spreadsheet_cevent_sqid to nobody
++      grant all on co_sys_spreadsheet_cevent_sqid to http
+       !GO 
+ 
+   create table co_sys_spreadsheet_cevent
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_spreadsheet_cevent to nobody
++  grant all on co_sys_spreadsheet_cevent to http
+   !GO 
+    
+     DROP INDEX co_sys_spreadsheet_cevent_inid
+diff -urN co.orig/sql/co_create_sys_spreadsheet_column.sql co/sql/co_create_sys_spreadsheet_column.sql
+--- co.orig/sql/co_create_sys_spreadsheet_column.sql	Fri Jan 10 14:53:35 2003
++++ co/sql/co_create_sys_spreadsheet_column.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_spreadsheet_column_sqid start 1
+       !GO
+-      grant all on co_sys_spreadsheet_column_sqid to nobody
++      grant all on co_sys_spreadsheet_column_sqid to http
+       !GO 
+ 
+   create table co_sys_spreadsheet_column
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_spreadsheet_column to nobody
++  grant all on co_sys_spreadsheet_column to http
+   !GO 
+    
+     DROP INDEX co_sys_spreadsheet_column_inid
+diff -urN co.orig/sql/co_create_sys_spreadsheet_rectangle.sql co/sql/co_create_sys_spreadsheet_rectangle.sql
+--- co.orig/sql/co_create_sys_spreadsheet_rectangle.sql	Fri Jan 10 14:54:30 2003
++++ co/sql/co_create_sys_spreadsheet_rectangle.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_spreadsheet_rectangle_sqid start 1
+       !GO
+-      grant all on co_sys_spreadsheet_rectangle_sqid to nobody
++      grant all on co_sys_spreadsheet_rectangle_sqid to http
+       !GO 
+ 
+   create table co_sys_spreadsheet_rectangle
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_spreadsheet_rectangle to nobody
++  grant all on co_sys_spreadsheet_rectangle to http
+   !GO 
+    
+     DROP INDEX co_sys_spreadsheet_rectangle_inid
+diff -urN co.orig/sql/co_create_sys_spreadsheet_row.sql co/sql/co_create_sys_spreadsheet_row.sql
+--- co.orig/sql/co_create_sys_spreadsheet_row.sql	Fri Jan 10 14:53:40 2003
++++ co/sql/co_create_sys_spreadsheet_row.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_spreadsheet_row_sqid start 1
+       !GO
+-      grant all on co_sys_spreadsheet_row_sqid to nobody
++      grant all on co_sys_spreadsheet_row_sqid to http
+       !GO 
+ 
+   create table co_sys_spreadsheet_row
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_spreadsheet_row to nobody
++  grant all on co_sys_spreadsheet_row to http
+   !GO 
+    
+     DROP INDEX co_sys_spreadsheet_row_inid
+diff -urN co.orig/sql/co_create_sys_text_document.sql co/sql/co_create_sys_text_document.sql
+--- co.orig/sql/co_create_sys_text_document.sql	Fri Jan 10 14:54:37 2003
++++ co/sql/co_create_sys_text_document.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_sys_text_document_sqid start 1
+       !GO
+-      grant all on co_sys_text_document_sqid to nobody
++      grant all on co_sys_text_document_sqid to http
+       !GO 
+ 
+   create table co_sys_text_document
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_sys_text_document to nobody
++  grant all on co_sys_text_document to http
+   !GO 
+    
+     DROP INDEX co_sys_text_document_inid
+diff -urN co.orig/sql/co_create_usr_action.noauto co/sql/co_create_usr_action.noauto
+--- co.orig/sql/co_create_usr_action.noauto	Thu Jun  1 23:27:22 2000
++++ co/sql/co_create_usr_action.noauto	Thu Mar 20 13:17:57 2003
+@@ -24,8 +24,8 @@
+ )
+ !GO
+ 
+-GRANT all ON co_usr_action TO nobody
++GRANT all ON co_usr_action TO http
+ !GO
+ /* session needs access to action_squid */
+-grant all on co_usr_action_sqid to nobody
++grant all on co_usr_action_sqid to http
+ !GO
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_usr_app_action.sql co/sql/co_create_usr_app_action.sql
+--- co.orig/sql/co_create_usr_app_action.sql	Fri Jan 10 14:54:45 2003
++++ co/sql/co_create_usr_app_action.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_app_action_sqid start 1
+       !GO
+-      grant all on co_usr_app_action_sqid to nobody
++      grant all on co_usr_app_action_sqid to http
+       !GO 
+ 
+   create table co_usr_app_action
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_app_action to nobody
++  grant all on co_usr_app_action to http
+   !GO 
+    
+     DROP INDEX co_usr_app_action_inid
+diff -urN co.orig/sql/co_create_usr_catalog.sql co/sql/co_create_usr_catalog.sql
+--- co.orig/sql/co_create_usr_catalog.sql	Fri Jan 10 14:52:41 2003
++++ co/sql/co_create_usr_catalog.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_catalog_sqid start 1
+       !GO
+-      grant all on co_usr_catalog_sqid to nobody
++      grant all on co_usr_catalog_sqid to http
+       !GO 
+ 
+   create table co_usr_catalog
+@@ -48,7 +48,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_catalog to nobody
++  grant all on co_usr_catalog to http
+   !GO 
+    
+     DROP INDEX co_usr_catalog_inid
+diff -urN co.orig/sql/co_create_usr_catalog_root.sql co/sql/co_create_usr_catalog_root.sql
+--- co.orig/sql/co_create_usr_catalog_root.sql	Fri Jan 10 14:52:45 2003
++++ co/sql/co_create_usr_catalog_root.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_catalog_root_sqid start 1
+       !GO
+-      grant all on co_usr_catalog_root_sqid to nobody
++      grant all on co_usr_catalog_root_sqid to http
+       !GO 
+ 
+   create table co_usr_catalog_root
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_catalog_root to nobody
++  grant all on co_usr_catalog_root to http
+   !GO 
+    
+     DROP INDEX co_usr_catalog_root_inid
+diff -urN co.orig/sql/co_create_usr_catalog_type.sql co/sql/co_create_usr_catalog_type.sql
+--- co.orig/sql/co_create_usr_catalog_type.sql	Fri Jan 10 14:52:43 2003
++++ co/sql/co_create_usr_catalog_type.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_catalog_type_sqid start 1
+       !GO
+-      grant all on co_usr_catalog_type_sqid to nobody
++      grant all on co_usr_catalog_type_sqid to http
+       !GO 
+ 
+   create table co_usr_catalog_type
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_catalog_type to nobody
++  grant all on co_usr_catalog_type to http
+   !GO 
+    
+     DROP INDEX co_usr_catalog_type_inid
+diff -urN co.orig/sql/co_create_usr_clipboard.sql co/sql/co_create_usr_clipboard.sql
+--- co.orig/sql/co_create_usr_clipboard.sql	Fri Jan 10 14:52:58 2003
++++ co/sql/co_create_usr_clipboard.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_clipboard_sqid start 1
+       !GO
+-      grant all on co_usr_clipboard_sqid to nobody
++      grant all on co_usr_clipboard_sqid to http
+       !GO 
+ 
+   create table co_usr_clipboard
+@@ -42,7 +42,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_clipboard to nobody
++  grant all on co_usr_clipboard to http
+   !GO 
+    
+     DROP INDEX co_usr_clipboard_inid
+diff -urN co.orig/sql/co_create_usr_file.sql co/sql/co_create_usr_file.sql
+--- co.orig/sql/co_create_usr_file.sql	Fri Jan 10 14:52:51 2003
++++ co/sql/co_create_usr_file.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_file_sqid start 1
+       !GO
+-      grant all on co_usr_file_sqid to nobody
++      grant all on co_usr_file_sqid to http
+       !GO 
+ 
+   create table co_usr_file
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_file to nobody
++  grant all on co_usr_file to http
+   !GO 
+    
+     DROP INDEX co_usr_file_inid
+diff -urN co.orig/sql/co_create_usr_generic.sql co/sql/co_create_usr_generic.sql
+--- co.orig/sql/co_create_usr_generic.sql	Fri Jan 10 14:52:10 2003
++++ co/sql/co_create_usr_generic.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_generic_sqid start 1
+       !GO
+-      grant all on co_usr_generic_sqid to nobody
++      grant all on co_usr_generic_sqid to http
+       !GO 
+ 
+   create table co_usr_generic
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_generic to nobody
++  grant all on co_usr_generic to http
+   !GO 
+    
+     DROP INDEX co_usr_generic_inid
+diff -urN co.orig/sql/co_create_usr_generic_acl.sql co/sql/co_create_usr_generic_acl.sql
+--- co.orig/sql/co_create_usr_generic_acl.sql	Fri Jan 10 14:52:23 2003
++++ co/sql/co_create_usr_generic_acl.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_generic_acl_sqid start 1
+       !GO
+-      grant all on co_usr_generic_acl_sqid to nobody
++      grant all on co_usr_generic_acl_sqid to http
+       !GO 
+ 
+   create table co_usr_generic_acl
+@@ -30,7 +30,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_generic_acl to nobody
++  grant all on co_usr_generic_acl to http
+   !GO 
+    
+     DROP INDEX co_usr_generic_acl_inid
+diff -urN co.orig/sql/co_create_usr_generic_iacl.sql co/sql/co_create_usr_generic_iacl.sql
+--- co.orig/sql/co_create_usr_generic_iacl.sql	Fri Jan 10 14:52:28 2003
++++ co/sql/co_create_usr_generic_iacl.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_generic_iacl_sqid start 1
+       !GO
+-      grant all on co_usr_generic_iacl_sqid to nobody
++      grant all on co_usr_generic_iacl_sqid to http
+       !GO 
+ 
+   create table co_usr_generic_iacl
+@@ -27,7 +27,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_generic_iacl to nobody
++  grant all on co_usr_generic_iacl to http
+   !GO 
+    
+     DROP INDEX co_usr_generic_iacl_inid
+diff -urN co.orig/sql/co_create_usr_js_code.sql co/sql/co_create_usr_js_code.sql
+--- co.orig/sql/co_create_usr_js_code.sql	Fri Jan 10 14:53:02 2003
++++ co/sql/co_create_usr_js_code.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_js_code_sqid start 1
+       !GO
+-      grant all on co_usr_js_code_sqid to nobody
++      grant all on co_usr_js_code_sqid to http
+       !GO 
+ 
+   create table co_usr_js_code
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_js_code to nobody
++  grant all on co_usr_js_code to http
+   !GO 
+    
+     DROP INDEX co_usr_js_code_inid
+diff -urN co.orig/sql/co_create_usr_js_lib.sql co/sql/co_create_usr_js_lib.sql
+--- co.orig/sql/co_create_usr_js_lib.sql	Fri Jan 10 14:53:03 2003
++++ co/sql/co_create_usr_js_lib.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_js_lib_sqid start 1
+       !GO
+-      grant all on co_usr_js_lib_sqid to nobody
++      grant all on co_usr_js_lib_sqid to http
+       !GO 
+ 
+   create table co_usr_js_lib
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_js_lib to nobody
++  grant all on co_usr_js_lib to http
+   !GO 
+    
+     DROP INDEX co_usr_js_lib_inid
+diff -urN co.orig/sql/co_create_usr_label_class.sql co/sql/co_create_usr_label_class.sql
+--- co.orig/sql/co_create_usr_label_class.sql	Fri Jan 10 14:53:19 2003
++++ co/sql/co_create_usr_label_class.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_label_class_sqid start 1
+       !GO
+-      grant all on co_usr_label_class_sqid to nobody
++      grant all on co_usr_label_class_sqid to http
+       !GO 
+ 
+   create table co_usr_label_class
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_label_class to nobody
++  grant all on co_usr_label_class to http
+   !GO 
+    
+     DROP INDEX co_usr_label_class_inid
+diff -urN co.orig/sql/co_create_usr_label_prop.sql co/sql/co_create_usr_label_prop.sql
+--- co.orig/sql/co_create_usr_label_prop.sql	Fri Jan 10 14:53:20 2003
++++ co/sql/co_create_usr_label_prop.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_label_prop_sqid start 1
+       !GO
+-      grant all on co_usr_label_prop_sqid to nobody
++      grant all on co_usr_label_prop_sqid to http
+       !GO 
+ 
+   create table co_usr_label_prop
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_label_prop to nobody
++  grant all on co_usr_label_prop to http
+   !GO 
+    
+     DROP INDEX co_usr_label_prop_inid
+diff -urN co.orig/sql/co_create_usr_label_relation.sql co/sql/co_create_usr_label_relation.sql
+--- co.orig/sql/co_create_usr_label_relation.sql	Fri Jan 10 14:53:21 2003
++++ co/sql/co_create_usr_label_relation.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_label_relation_sqid start 1
+       !GO
+-      grant all on co_usr_label_relation_sqid to nobody
++      grant all on co_usr_label_relation_sqid to http
+       !GO 
+ 
+   create table co_usr_label_relation
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_label_relation to nobody
++  grant all on co_usr_label_relation to http
+   !GO 
+    
+     DROP INDEX co_usr_label_relation_inid
+diff -urN co.orig/sql/co_create_usr_menu.sql co/sql/co_create_usr_menu.sql
+--- co.orig/sql/co_create_usr_menu.sql	Fri Jan 10 14:53:08 2003
++++ co/sql/co_create_usr_menu.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_menu_sqid start 1
+       !GO
+-      grant all on co_usr_menu_sqid to nobody
++      grant all on co_usr_menu_sqid to http
+       !GO 
+ 
+   create table co_usr_menu
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_menu to nobody
++  grant all on co_usr_menu to http
+   !GO 
+    
+     DROP INDEX co_usr_menu_inid
+diff -urN co.orig/sql/co_create_usr_menu_action.sql co/sql/co_create_usr_menu_action.sql
+--- co.orig/sql/co_create_usr_menu_action.sql	Fri Jan 10 14:53:10 2003
++++ co/sql/co_create_usr_menu_action.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_menu_action_sqid start 1
+       !GO
+-      grant all on co_usr_menu_action_sqid to nobody
++      grant all on co_usr_menu_action_sqid to http
+       !GO 
+ 
+   create table co_usr_menu_action
+@@ -36,7 +36,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_menu_action to nobody
++  grant all on co_usr_menu_action to http
+   !GO 
+    
+     DROP INDEX co_usr_menu_action_inid
+diff -urN co.orig/sql/co_create_usr_menu_action_param.sql co/sql/co_create_usr_menu_action_param.sql
+--- co.orig/sql/co_create_usr_menu_action_param.sql	Fri Jan 10 14:53:12 2003
++++ co/sql/co_create_usr_menu_action_param.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_menu_action_param_sqid start 1
+       !GO
+-      grant all on co_usr_menu_action_param_sqid to nobody
++      grant all on co_usr_menu_action_param_sqid to http
+       !GO 
+ 
+   create table co_usr_menu_action_param
+@@ -54,7 +54,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_menu_action_param to nobody
++  grant all on co_usr_menu_action_param to http
+   !GO 
+    
+     DROP INDEX co_usr_menu_action_param_inid
+diff -urN co.orig/sql/co_create_usr_meta_class.sql co/sql/co_create_usr_meta_class.sql
+--- co.orig/sql/co_create_usr_meta_class.sql	Fri Jan 10 14:53:14 2003
++++ co/sql/co_create_usr_meta_class.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_meta_class_sqid start 1
+       !GO
+-      grant all on co_usr_meta_class_sqid to nobody
++      grant all on co_usr_meta_class_sqid to http
+       !GO 
+ 
+   create table co_usr_meta_class
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_meta_class to nobody
++  grant all on co_usr_meta_class to http
+   !GO 
+    
+     DROP INDEX co_usr_meta_class_inid
+diff -urN co.orig/sql/co_create_usr_meta_method.sql co/sql/co_create_usr_meta_method.sql
+--- co.orig/sql/co_create_usr_meta_method.sql	Fri Jan 10 14:53:15 2003
++++ co/sql/co_create_usr_meta_method.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_meta_method_sqid start 1
+       !GO
+-      grant all on co_usr_meta_method_sqid to nobody
++      grant all on co_usr_meta_method_sqid to http
+       !GO 
+ 
+   create table co_usr_meta_method
+@@ -60,7 +60,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_meta_method to nobody
++  grant all on co_usr_meta_method to http
+   !GO 
+    
+     DROP INDEX co_usr_meta_method_inid
+diff -urN co.orig/sql/co_create_usr_meta_prop.sql co/sql/co_create_usr_meta_prop.sql
+--- co.orig/sql/co_create_usr_meta_prop.sql	Fri Jan 10 14:53:17 2003
++++ co/sql/co_create_usr_meta_prop.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_meta_prop_sqid start 1
+       !GO
+-      grant all on co_usr_meta_prop_sqid to nobody
++      grant all on co_usr_meta_prop_sqid to http
+       !GO 
+ 
+   create table co_usr_meta_prop
+@@ -72,7 +72,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_meta_prop to nobody
++  grant all on co_usr_meta_prop to http
+   !GO 
+    
+     DROP INDEX co_usr_meta_prop_inid
+diff -urN co.orig/sql/co_create_usr_meta_vtable.sql co/sql/co_create_usr_meta_vtable.sql
+--- co.orig/sql/co_create_usr_meta_vtable.sql	Fri Jan 10 14:53:18 2003
++++ co/sql/co_create_usr_meta_vtable.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_meta_vtable_sqid start 1
+       !GO
+-      grant all on co_usr_meta_vtable_sqid to nobody
++      grant all on co_usr_meta_vtable_sqid to http
+       !GO 
+ 
+   create table co_usr_meta_vtable
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_meta_vtable to nobody
++  grant all on co_usr_meta_vtable to http
+   !GO 
+    
+     DROP INDEX co_usr_meta_vtable_inid
+diff -urN co.orig/sql/co_create_usr_picture.sql co/sql/co_create_usr_picture.sql
+--- co.orig/sql/co_create_usr_picture.sql	Fri Jan 10 14:53:25 2003
++++ co/sql/co_create_usr_picture.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_picture_sqid start 1
+       !GO
+-      grant all on co_usr_picture_sqid to nobody
++      grant all on co_usr_picture_sqid to http
+       !GO 
+ 
+   create table co_usr_picture
+@@ -33,7 +33,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_picture to nobody
++  grant all on co_usr_picture to http
+   !GO 
+    
+     DROP INDEX co_usr_picture_inid
+diff -urN co.orig/sql/co_create_usr_profiler.sql co/sql/co_create_usr_profiler.sql
+--- co.orig/sql/co_create_usr_profiler.sql	Fri Jan 10 14:53:28 2003
++++ co/sql/co_create_usr_profiler.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_profiler_sqid start 1
+       !GO
+-      grant all on co_usr_profiler_sqid to nobody
++      grant all on co_usr_profiler_sqid to http
+       !GO 
+ 
+   create table co_usr_profiler
+@@ -36,6 +36,6 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_profiler to nobody
++  grant all on co_usr_profiler to http
+   !GO 
+   
+\ No newline at end of file
+diff -urN co.orig/sql/co_create_usr_report.sql co/sql/co_create_usr_report.sql
+--- co.orig/sql/co_create_usr_report.sql	Fri Jan 10 14:54:42 2003
++++ co/sql/co_create_usr_report.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_report_sqid start 1
+       !GO
+-      grant all on co_usr_report_sqid to nobody
++      grant all on co_usr_report_sqid to http
+       !GO 
+ 
+   create table co_usr_report
+@@ -45,7 +45,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_report to nobody
++  grant all on co_usr_report to http
+   !GO 
+    
+     DROP INDEX co_usr_report_inid
+diff -urN co.orig/sql/co_create_usr_report_element.sql co/sql/co_create_usr_report_element.sql
+--- co.orig/sql/co_create_usr_report_element.sql	Fri Jan 10 14:54:43 2003
++++ co/sql/co_create_usr_report_element.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_report_element_sqid start 1
+       !GO
+-      grant all on co_usr_report_element_sqid to nobody
++      grant all on co_usr_report_element_sqid to http
+       !GO 
+ 
+   create table co_usr_report_element
+@@ -54,7 +54,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_report_element to nobody
++  grant all on co_usr_report_element to http
+   !GO 
+    
+     DROP INDEX co_usr_report_element_inid
+diff -urN co.orig/sql/co_create_usr_sdoc.sql co/sql/co_create_usr_sdoc.sql
+--- co.orig/sql/co_create_usr_sdoc.sql	Fri Jan 10 14:54:47 2003
++++ co/sql/co_create_usr_sdoc.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_sdoc_sqid start 1
+       !GO
+-      grant all on co_usr_sdoc_sqid to nobody
++      grant all on co_usr_sdoc_sqid to http
+       !GO 
+ 
+   create table co_usr_sdoc
+@@ -63,7 +63,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_sdoc to nobody
++  grant all on co_usr_sdoc to http
+   !GO 
+    
+     DROP INDEX co_usr_sdoc_inid
+diff -urN co.orig/sql/co_create_usr_sdoc_tag.sql co/sql/co_create_usr_sdoc_tag.sql
+--- co.orig/sql/co_create_usr_sdoc_tag.sql	Fri Jan 10 14:54:48 2003
++++ co/sql/co_create_usr_sdoc_tag.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_sdoc_tag_sqid start 1
+       !GO
+-      grant all on co_usr_sdoc_tag_sqid to nobody
++      grant all on co_usr_sdoc_tag_sqid to http
+       !GO 
+ 
+   create table co_usr_sdoc_tag
+@@ -51,7 +51,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_sdoc_tag to nobody
++  grant all on co_usr_sdoc_tag to http
+   !GO 
+    
+     DROP INDEX co_usr_sdoc_tag_inid
+diff -urN co.orig/sql/co_create_usr_shell_command.sql co/sql/co_create_usr_shell_command.sql
+--- co.orig/sql/co_create_usr_shell_command.sql	Fri Jan 10 14:54:46 2003
++++ co/sql/co_create_usr_shell_command.sql	Thu Mar 20 13:17:57 2003
+@@ -11,7 +11,7 @@
+       !NOERROR
+       create sequence co_usr_shell_command_sqid start 1
+       !GO
+-      grant all on co_usr_shell_command_sqid to nobody
++      grant all on co_usr_shell_command_sqid to http
+       !GO 
+ 
+   create table co_usr_shell_command
+@@ -39,7 +39,7 @@
+ 
+   )
+   !GO
+-  grant all on co_usr_shell_command to nobody
++  grant all on co_usr_shell_command to http
+   !GO 
+    
+     DROP INDEX co_usr_shell_command_inid
+diff -urN co.orig/sql/co_set_0000_permission.pl co/sql/co_set_0000_permission.pl
+--- co.orig/sql/co_set_0000_permission.pl	Fri Jan 10 14:53:22 2003
++++ co/sql/co_set_0000_permission.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_0100_first_user.pl co/sql/co_set_0100_first_user.pl
+--- co.orig/sql/co_set_0100_first_user.pl	Fri Jan 10 14:54:41 2003
++++ co/sql/co_set_0100_first_user.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_0150_first_catalog_type.pl co/sql/co_set_0150_first_catalog_type.pl
+--- co.orig/sql/co_set_0150_first_catalog_type.pl	Fri Jan 10 14:52:43 2003
++++ co/sql/co_set_0150_first_catalog_type.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_0200_role.pl co/sql/co_set_0200_role.pl
+--- co.orig/sql/co_set_0200_role.pl	Fri Jan 10 14:53:30 2003
++++ co/sql/co_set_0200_role.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+@@ -53,7 +53,7 @@
+       $conn->exec("DELETE FROM co_sec_role");
+       $conn->exec("DROP SEQUENCE co_sec_role_sqid");
+       $conn->exec("CREATE SEQUENCE co_sec_role_sqid");
+-      $conn->exec("GRANT ALL ON co_sec_role_sqid TO nobody");
++      $conn->exec("GRANT ALL ON co_sec_role_sqid TO http");
+ 
+ 
+ 
+diff -urN co.orig/sql/co_set_0300_user.pl co/sql/co_set_0300_user.pl
+--- co.orig/sql/co_set_0300_user.pl	Fri Jan 10 14:54:41 2003
++++ co/sql/co_set_0300_user.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_3000_clipboard.pl co/sql/co_set_3000_clipboard.pl
+--- co.orig/sql/co_set_3000_clipboard.pl	Fri Jan 10 14:52:58 2003
++++ co/sql/co_set_3000_clipboard.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_3100_file.pl co/sql/co_set_3100_file.pl
+--- co.orig/sql/co_set_3100_file.pl	Fri Jan 10 14:52:50 2003
++++ co/sql/co_set_3100_file.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_3200_picture.pl co/sql/co_set_3200_picture.pl
+--- co.orig/sql/co_set_3200_picture.pl	Fri Jan 10 14:53:25 2003
++++ co/sql/co_set_3200_picture.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_3300_report.pl co/sql/co_set_3300_report.pl
+--- co.orig/sql/co_set_3300_report.pl	Fri Jan 10 14:54:42 2003
++++ co/sql/co_set_3300_report.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_3400_spreadsheet.pl co/sql/co_set_3400_spreadsheet.pl
+--- co.orig/sql/co_set_3400_spreadsheet.pl	Fri Jan 10 14:54:17 2003
++++ co/sql/co_set_3400_spreadsheet.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_4000_catalog_type.pl co/sql/co_set_4000_catalog_type.pl
+--- co.orig/sql/co_set_4000_catalog_type.pl	Fri Jan 10 14:52:43 2003
++++ co/sql/co_set_4000_catalog_type.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_4100_catalog.pl co/sql/co_set_4100_catalog.pl
+--- co.orig/sql/co_set_4100_catalog.pl	Fri Jan 10 14:52:41 2003
++++ co/sql/co_set_4100_catalog.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_4200_catalog_root.pl co/sql/co_set_4200_catalog_root.pl
+--- co.orig/sql/co_set_4200_catalog_root.pl	Fri Jan 10 14:52:44 2003
++++ co/sql/co_set_4200_catalog_root.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_4700_sdoc_tag.pl co/sql/co_set_4700_sdoc_tag.pl
+--- co.orig/sql/co_set_4700_sdoc_tag.pl	Fri Jan 10 14:54:48 2003
++++ co/sql/co_set_4700_sdoc_tag.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_4800_sdoc.pl co/sql/co_set_4800_sdoc.pl
+--- co.orig/sql/co_set_4800_sdoc.pl	Fri Jan 10 14:54:47 2003
++++ co/sql/co_set_4800_sdoc.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_5000_cevent_type.pl co/sql/co_set_5000_cevent_type.pl
+--- co.orig/sql/co_set_5000_cevent_type.pl	Fri Jan 10 14:52:55 2003
++++ co/sql/co_set_5000_cevent_type.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_5100_cevent_spreadsheet.pl co/sql/co_set_5100_cevent_spreadsheet.pl
+--- co.orig/sql/co_set_5100_cevent_spreadsheet.pl	Fri Jan 10 14:54:27 2003
++++ co/sql/co_set_5100_cevent_spreadsheet.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_6000_menu.pl co/sql/co_set_6000_menu.pl
+--- co.orig/sql/co_set_6000_menu.pl	Fri Jan 10 14:53:08 2003
++++ co/sql/co_set_6000_menu.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_6100_menu_generic_acl.pl co/sql/co_set_6100_menu_generic_acl.pl
+--- co.orig/sql/co_set_6100_menu_generic_acl.pl	Fri Jan 10 14:52:22 2003
++++ co/sql/co_set_6100_menu_generic_acl.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_6200_menu_catalog.pl co/sql/co_set_6200_menu_catalog.pl
+--- co.orig/sql/co_set_6200_menu_catalog.pl	Fri Jan 10 14:52:41 2003
++++ co/sql/co_set_6200_menu_catalog.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_8000_js_lib.pl co/sql/co_set_8000_js_lib.pl
+--- co.orig/sql/co_set_8000_js_lib.pl	Fri Jan 10 14:53:03 2003
++++ co/sql/co_set_8000_js_lib.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_8100_lib_expression.pl co/sql/co_set_8100_lib_expression.pl
+--- co.orig/sql/co_set_8100_lib_expression.pl	Fri Jan 10 14:53:54 2003
++++ co/sql/co_set_8100_lib_expression.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_9000_app_action.pl co/sql/co_set_9000_app_action.pl
+--- co.orig/sql/co_set_9000_app_action.pl	Fri Jan 10 14:54:44 2003
++++ co/sql/co_set_9000_app_action.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_9999_acl.pl co/sql/co_set_9999_acl.pl
+--- co.orig/sql/co_set_9999_acl.pl	Fri Jan 10 14:52:46 2003
++++ co/sql/co_set_9999_acl.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_9999_acl_class.pl co/sql/co_set_9999_acl_class.pl
+--- co.orig/sql/co_set_9999_acl_class.pl	Fri Jan 10 14:52:47 2003
++++ co/sql/co_set_9999_acl_class.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_9999_last_js_code.pl co/sql/co_set_9999_last_js_code.pl
+--- co.orig/sql/co_set_9999_last_js_code.pl	Fri Jan 10 14:53:02 2003
++++ co/sql/co_set_9999_last_js_code.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_set_menu_user.pl co/sql/co_set_menu_user.pl
+--- co.orig/sql/co_set_menu_user.pl	Fri Jan 10 14:54:41 2003
++++ co/sql/co_set_menu_user.pl	Thu Mar 20 13:18:01 2003
+@@ -6,9 +6,9 @@
+ $loaded = 1;
+ use strict;
+ ######################### End of black magic.
+-##my $dbmain = 'nobody';
+-##my $dbname = 'nobody';
+-my $dbconnstr = 'dbname=nobody';
++##my $dbmain = 'http';
++##my $dbname = 'http';
++my $dbconnstr = 'dbname=http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+ my $DEBUG  = 0; # set this to 1 for traces
+diff -urN co.orig/sql/co_views_sec_acl.sql co/sql/co_views_sec_acl.sql
+--- co.orig/sql/co_views_sec_acl.sql	Fri Jan 10 14:52:46 2003
++++ co/sql/co_views_sec_acl.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_acl AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_acl TO nobody   
++ GRANT ALL ON  cov_sec_acl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_acl_class.sql co/sql/co_views_sec_acl_class.sql
+--- co.orig/sql/co_views_sec_acl_class.sql	Fri Jan 10 14:52:47 2003
++++ co/sql/co_views_sec_acl_class.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_acl_class AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_acl_class TO nobody   
++ GRANT ALL ON  cov_sec_acl_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_catalog.sql co/sql/co_views_sec_catalog.sql
+--- co.orig/sql/co_views_sec_catalog.sql	Fri Jan 10 14:52:41 2003
++++ co/sql/co_views_sec_catalog.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_catalog AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_catalog TO nobody   
++ GRANT ALL ON  cov_sec_catalog TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_catalog_root.sql co/sql/co_views_sec_catalog_root.sql
+--- co.orig/sql/co_views_sec_catalog_root.sql	Fri Jan 10 14:52:45 2003
++++ co/sql/co_views_sec_catalog_root.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_catalog_root AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_catalog_root TO nobody   
++ GRANT ALL ON  cov_sec_catalog_root TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_catalog_type.sql co/sql/co_views_sec_catalog_type.sql
+--- co.orig/sql/co_views_sec_catalog_type.sql	Fri Jan 10 14:52:43 2003
++++ co/sql/co_views_sec_catalog_type.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_catalog_type AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_catalog_type TO nobody   
++ GRANT ALL ON  cov_sec_catalog_type TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_clipboard.sql co/sql/co_views_sec_clipboard.sql
+--- co.orig/sql/co_views_sec_clipboard.sql	Fri Jan 10 14:52:58 2003
++++ co/sql/co_views_sec_clipboard.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_clipboard AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_clipboard TO nobody   
++ GRANT ALL ON  cov_sec_clipboard TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_file.sql co/sql/co_views_sec_file.sql
+--- co.orig/sql/co_views_sec_file.sql	Fri Jan 10 14:52:51 2003
++++ co/sql/co_views_sec_file.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_file AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_file TO nobody   
++ GRANT ALL ON  cov_sec_file TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_generic.sql co/sql/co_views_sec_generic.sql
+--- co.orig/sql/co_views_sec_generic.sql	Fri Jan 10 14:52:10 2003
++++ co/sql/co_views_sec_generic.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_generic AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_generic TO nobody   
++ GRANT ALL ON  cov_sec_generic TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_generic_acl.sql co/sql/co_views_sec_generic_acl.sql
+--- co.orig/sql/co_views_sec_generic_acl.sql	Fri Jan 10 14:52:23 2003
++++ co/sql/co_views_sec_generic_acl.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_generic_acl AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_generic_acl TO nobody   
++ GRANT ALL ON  cov_sec_generic_acl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_generic_iacl.sql co/sql/co_views_sec_generic_iacl.sql
+--- co.orig/sql/co_views_sec_generic_iacl.sql	Fri Jan 10 14:52:28 2003
++++ co/sql/co_views_sec_generic_iacl.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_generic_iacl AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_generic_iacl TO nobody   
++ GRANT ALL ON  cov_sec_generic_iacl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_js_code.sql co/sql/co_views_sec_js_code.sql
+--- co.orig/sql/co_views_sec_js_code.sql	Fri Jan 10 14:53:02 2003
++++ co/sql/co_views_sec_js_code.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_js_code AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_js_code TO nobody   
++ GRANT ALL ON  cov_sec_js_code TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_js_lib.sql co/sql/co_views_sec_js_lib.sql
+--- co.orig/sql/co_views_sec_js_lib.sql	Fri Jan 10 14:53:03 2003
++++ co/sql/co_views_sec_js_lib.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_js_lib AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_js_lib TO nobody   
++ GRANT ALL ON  cov_sec_js_lib TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_label_class.sql co/sql/co_views_sec_label_class.sql
+--- co.orig/sql/co_views_sec_label_class.sql	Fri Jan 10 14:53:19 2003
++++ co/sql/co_views_sec_label_class.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_label_class AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_label_class TO nobody   
++ GRANT ALL ON  cov_sec_label_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_label_prop.sql co/sql/co_views_sec_label_prop.sql
+--- co.orig/sql/co_views_sec_label_prop.sql	Fri Jan 10 14:53:20 2003
++++ co/sql/co_views_sec_label_prop.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_label_prop AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_label_prop TO nobody   
++ GRANT ALL ON  cov_sec_label_prop TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_label_relation.sql co/sql/co_views_sec_label_relation.sql
+--- co.orig/sql/co_views_sec_label_relation.sql	Fri Jan 10 14:53:21 2003
++++ co/sql/co_views_sec_label_relation.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_label_relation AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_label_relation TO nobody   
++ GRANT ALL ON  cov_sec_label_relation TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_menu.sql co/sql/co_views_sec_menu.sql
+--- co.orig/sql/co_views_sec_menu.sql	Fri Jan 10 14:53:08 2003
++++ co/sql/co_views_sec_menu.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_menu AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_menu TO nobody   
++ GRANT ALL ON  cov_sec_menu TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_menu_action.sql co/sql/co_views_sec_menu_action.sql
+--- co.orig/sql/co_views_sec_menu_action.sql	Fri Jan 10 14:53:10 2003
++++ co/sql/co_views_sec_menu_action.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_menu_action AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_menu_action TO nobody   
++ GRANT ALL ON  cov_sec_menu_action TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_menu_action_param.sql co/sql/co_views_sec_menu_action_param.sql
+--- co.orig/sql/co_views_sec_menu_action_param.sql	Fri Jan 10 14:53:12 2003
++++ co/sql/co_views_sec_menu_action_param.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_menu_action_param AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_menu_action_param TO nobody   
++ GRANT ALL ON  cov_sec_menu_action_param TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_meta_class.sql co/sql/co_views_sec_meta_class.sql
+--- co.orig/sql/co_views_sec_meta_class.sql	Fri Jan 10 14:53:14 2003
++++ co/sql/co_views_sec_meta_class.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_meta_class AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_meta_class TO nobody   
++ GRANT ALL ON  cov_sec_meta_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_meta_method.sql co/sql/co_views_sec_meta_method.sql
+--- co.orig/sql/co_views_sec_meta_method.sql	Fri Jan 10 14:53:15 2003
++++ co/sql/co_views_sec_meta_method.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_meta_method AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_meta_method TO nobody   
++ GRANT ALL ON  cov_sec_meta_method TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_meta_prop.sql co/sql/co_views_sec_meta_prop.sql
+--- co.orig/sql/co_views_sec_meta_prop.sql	Fri Jan 10 14:53:17 2003
++++ co/sql/co_views_sec_meta_prop.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_meta_prop AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_meta_prop TO nobody   
++ GRANT ALL ON  cov_sec_meta_prop TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_meta_vtable.sql co/sql/co_views_sec_meta_vtable.sql
+--- co.orig/sql/co_views_sec_meta_vtable.sql	Fri Jan 10 14:53:18 2003
++++ co/sql/co_views_sec_meta_vtable.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_meta_vtable AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_meta_vtable TO nobody   
++ GRANT ALL ON  cov_sec_meta_vtable TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_permission.sql co/sql/co_views_sec_permission.sql
+--- co.orig/sql/co_views_sec_permission.sql	Fri Jan 10 14:53:22 2003
++++ co/sql/co_views_sec_permission.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_permission AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_permission TO nobody   
++ GRANT ALL ON  cov_sec_permission TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_preference.sql co/sql/co_views_sec_preference.sql
+--- co.orig/sql/co_views_sec_preference.sql	Fri Jan 10 14:53:26 2003
++++ co/sql/co_views_sec_preference.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_preference AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_preference TO nobody   
++ GRANT ALL ON  cov_sec_preference TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_profiler.sql co/sql/co_views_sec_profiler.sql
+--- co.orig/sql/co_views_sec_profiler.sql	Fri Jan 10 14:53:28 2003
++++ co/sql/co_views_sec_profiler.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_profiler AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_profiler TO nobody   
++ GRANT ALL ON  cov_sec_profiler TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_report.sql co/sql/co_views_sec_report.sql
+--- co.orig/sql/co_views_sec_report.sql	Fri Jan 10 14:54:42 2003
++++ co/sql/co_views_sec_report.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_report AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_report TO nobody   
++ GRANT ALL ON  cov_sec_report TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_report_element.sql co/sql/co_views_sec_report_element.sql
+--- co.orig/sql/co_views_sec_report_element.sql	Fri Jan 10 14:54:43 2003
++++ co/sql/co_views_sec_report_element.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_report_element AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_report_element TO nobody   
++ GRANT ALL ON  cov_sec_report_element TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_role.sql co/sql/co_views_sec_role.sql
+--- co.orig/sql/co_views_sec_role.sql	Fri Jan 10 14:53:30 2003
++++ co/sql/co_views_sec_role.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_role AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_role TO nobody   
++ GRANT ALL ON  cov_sec_role TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_shell_command.sql co/sql/co_views_sec_shell_command.sql
+--- co.orig/sql/co_views_sec_shell_command.sql	Fri Jan 10 14:54:46 2003
++++ co/sql/co_views_sec_shell_command.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_shell_command AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_shell_command TO nobody   
++ GRANT ALL ON  cov_sec_shell_command TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_start_page.sql co/sql/co_views_sec_start_page.sql
+--- co.orig/sql/co_views_sec_start_page.sql	Fri Jan 10 14:53:43 2003
++++ co/sql/co_views_sec_start_page.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_start_page AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_start_page TO nobody   
++ GRANT ALL ON  cov_sec_start_page TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sec_user.sql co/sql/co_views_sec_user.sql
+--- co.orig/sql/co_views_sec_user.sql	Fri Jan 10 14:54:41 2003
++++ co/sql/co_views_sec_user.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sec_user AS c 
+                !GO 
+- GRANT ALL ON  cov_sec_user TO nobody   
++ GRANT ALL ON  cov_sec_user TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_attachment.sql co/sql/co_views_sys_attachment.sql
+--- co.orig/sql/co_views_sys_attachment.sql	Fri Jan 10 14:52:54 2003
++++ co/sql/co_views_sys_attachment.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_attachment AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_attachment TO nobody   
++ GRANT ALL ON  cov_sys_attachment TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_catalog.sql co/sql/co_views_sys_catalog.sql
+--- co.orig/sql/co_views_sys_catalog.sql	Fri Jan 10 14:52:41 2003
++++ co/sql/co_views_sys_catalog.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_catalog AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_catalog TO nobody   
++ GRANT ALL ON  cov_sys_catalog TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_catalog_root.sql co/sql/co_views_sys_catalog_root.sql
+--- co.orig/sql/co_views_sys_catalog_root.sql	Fri Jan 10 14:52:45 2003
++++ co/sql/co_views_sys_catalog_root.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_catalog_root AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_catalog_root TO nobody   
++ GRANT ALL ON  cov_sys_catalog_root TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_catalog_type.sql co/sql/co_views_sys_catalog_type.sql
+--- co.orig/sql/co_views_sys_catalog_type.sql	Fri Jan 10 14:52:43 2003
++++ co/sql/co_views_sys_catalog_type.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_catalog_type AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_catalog_type TO nobody   
++ GRANT ALL ON  cov_sys_catalog_type TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_cevent_type.sql co/sql/co_views_sys_cevent_type.sql
+--- co.orig/sql/co_views_sys_cevent_type.sql	Fri Jan 10 14:52:55 2003
++++ co/sql/co_views_sys_cevent_type.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_cevent_type AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_cevent_type TO nobody   
++ GRANT ALL ON  cov_sys_cevent_type TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_clipboard.sql co/sql/co_views_sys_clipboard.sql
+--- co.orig/sql/co_views_sys_clipboard.sql	Fri Jan 10 14:52:58 2003
++++ co/sql/co_views_sys_clipboard.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_clipboard AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_clipboard TO nobody   
++ GRANT ALL ON  cov_sys_clipboard TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_expression.sql co/sql/co_views_sys_expression.sql
+--- co.orig/sql/co_views_sys_expression.sql	Fri Jan 10 14:53:55 2003
++++ co/sql/co_views_sys_expression.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_expression AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_expression TO nobody   
++ GRANT ALL ON  cov_sys_expression TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_expression_cell.sql co/sql/co_views_sys_expression_cell.sql
+--- co.orig/sql/co_views_sys_expression_cell.sql	Fri Jan 10 14:54:00 2003
++++ co/sql/co_views_sys_expression_cell.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_expression_cell AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_expression_cell TO nobody   
++ GRANT ALL ON  cov_sys_expression_cell TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_expression_range.sql co/sql/co_views_sys_expression_range.sql
+--- co.orig/sql/co_views_sys_expression_range.sql	Fri Jan 10 14:54:07 2003
++++ co/sql/co_views_sys_expression_range.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_expression_range AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_expression_range TO nobody   
++ GRANT ALL ON  cov_sys_expression_range TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_file.sql co/sql/co_views_sys_file.sql
+--- co.orig/sql/co_views_sys_file.sql	Fri Jan 10 14:52:51 2003
++++ co/sql/co_views_sys_file.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_file AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_file TO nobody   
++ GRANT ALL ON  cov_sys_file TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_generic.sql co/sql/co_views_sys_generic.sql
+--- co.orig/sql/co_views_sys_generic.sql	Fri Jan 10 14:52:10 2003
++++ co/sql/co_views_sys_generic.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_generic AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_generic TO nobody   
++ GRANT ALL ON  cov_sys_generic TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_generic_acl.sql co/sql/co_views_sys_generic_acl.sql
+--- co.orig/sql/co_views_sys_generic_acl.sql	Fri Jan 10 14:52:23 2003
++++ co/sql/co_views_sys_generic_acl.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_generic_acl AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_generic_acl TO nobody   
++ GRANT ALL ON  cov_sys_generic_acl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_generic_iacl.sql co/sql/co_views_sys_generic_iacl.sql
+--- co.orig/sql/co_views_sys_generic_iacl.sql	Fri Jan 10 14:52:28 2003
++++ co/sql/co_views_sys_generic_iacl.sql	Thu Mar 20 13:18:01 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_generic_iacl AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_generic_iacl TO nobody   
++ GRANT ALL ON  cov_sys_generic_iacl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_js_code.sql co/sql/co_views_sys_js_code.sql
+--- co.orig/sql/co_views_sys_js_code.sql	Fri Jan 10 14:53:02 2003
++++ co/sql/co_views_sys_js_code.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_js_code AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_js_code TO nobody   
++ GRANT ALL ON  cov_sys_js_code TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_js_lib.sql co/sql/co_views_sys_js_lib.sql
+--- co.orig/sql/co_views_sys_js_lib.sql	Fri Jan 10 14:53:03 2003
++++ co/sql/co_views_sys_js_lib.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_js_lib AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_js_lib TO nobody   
++ GRANT ALL ON  cov_sys_js_lib TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_label_class.sql co/sql/co_views_sys_label_class.sql
+--- co.orig/sql/co_views_sys_label_class.sql	Fri Jan 10 14:53:19 2003
++++ co/sql/co_views_sys_label_class.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_label_class AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_label_class TO nobody   
++ GRANT ALL ON  cov_sys_label_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_label_prop.sql co/sql/co_views_sys_label_prop.sql
+--- co.orig/sql/co_views_sys_label_prop.sql	Fri Jan 10 14:53:20 2003
++++ co/sql/co_views_sys_label_prop.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_label_prop AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_label_prop TO nobody   
++ GRANT ALL ON  cov_sys_label_prop TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_label_relation.sql co/sql/co_views_sys_label_relation.sql
+--- co.orig/sql/co_views_sys_label_relation.sql	Fri Jan 10 14:53:21 2003
++++ co/sql/co_views_sys_label_relation.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_label_relation AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_label_relation TO nobody   
++ GRANT ALL ON  cov_sys_label_relation TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_menu.sql co/sql/co_views_sys_menu.sql
+--- co.orig/sql/co_views_sys_menu.sql	Fri Jan 10 14:53:08 2003
++++ co/sql/co_views_sys_menu.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_menu AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_menu TO nobody   
++ GRANT ALL ON  cov_sys_menu TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_menu_action.sql co/sql/co_views_sys_menu_action.sql
+--- co.orig/sql/co_views_sys_menu_action.sql	Fri Jan 10 14:53:10 2003
++++ co/sql/co_views_sys_menu_action.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_menu_action AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_menu_action TO nobody   
++ GRANT ALL ON  cov_sys_menu_action TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_menu_action_param.sql co/sql/co_views_sys_menu_action_param.sql
+--- co.orig/sql/co_views_sys_menu_action_param.sql	Fri Jan 10 14:53:12 2003
++++ co/sql/co_views_sys_menu_action_param.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_menu_action_param AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_menu_action_param TO nobody   
++ GRANT ALL ON  cov_sys_menu_action_param TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_meta_class.sql co/sql/co_views_sys_meta_class.sql
+--- co.orig/sql/co_views_sys_meta_class.sql	Fri Jan 10 14:53:14 2003
++++ co/sql/co_views_sys_meta_class.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_meta_class AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_meta_class TO nobody   
++ GRANT ALL ON  cov_sys_meta_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_meta_method.sql co/sql/co_views_sys_meta_method.sql
+--- co.orig/sql/co_views_sys_meta_method.sql	Fri Jan 10 14:53:15 2003
++++ co/sql/co_views_sys_meta_method.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_meta_method AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_meta_method TO nobody   
++ GRANT ALL ON  cov_sys_meta_method TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_meta_prop.sql co/sql/co_views_sys_meta_prop.sql
+--- co.orig/sql/co_views_sys_meta_prop.sql	Fri Jan 10 14:53:17 2003
++++ co/sql/co_views_sys_meta_prop.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_meta_prop AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_meta_prop TO nobody   
++ GRANT ALL ON  cov_sys_meta_prop TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_meta_vtable.sql co/sql/co_views_sys_meta_vtable.sql
+--- co.orig/sql/co_views_sys_meta_vtable.sql	Fri Jan 10 14:53:18 2003
++++ co/sql/co_views_sys_meta_vtable.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_meta_vtable AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_meta_vtable TO nobody   
++ GRANT ALL ON  cov_sys_meta_vtable TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_picture.sql co/sql/co_views_sys_picture.sql
+--- co.orig/sql/co_views_sys_picture.sql	Fri Jan 10 14:53:25 2003
++++ co/sql/co_views_sys_picture.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_picture AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_picture TO nobody   
++ GRANT ALL ON  cov_sys_picture TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_profiler.sql co/sql/co_views_sys_profiler.sql
+--- co.orig/sql/co_views_sys_profiler.sql	Fri Jan 10 14:53:28 2003
++++ co/sql/co_views_sys_profiler.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_profiler AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_profiler TO nobody   
++ GRANT ALL ON  cov_sys_profiler TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_report.sql co/sql/co_views_sys_report.sql
+--- co.orig/sql/co_views_sys_report.sql	Fri Jan 10 14:54:42 2003
++++ co/sql/co_views_sys_report.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_report AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_report TO nobody   
++ GRANT ALL ON  cov_sys_report TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_report_element.sql co/sql/co_views_sys_report_element.sql
+--- co.orig/sql/co_views_sys_report_element.sql	Fri Jan 10 14:54:43 2003
++++ co/sql/co_views_sys_report_element.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_report_element AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_report_element TO nobody   
++ GRANT ALL ON  cov_sys_report_element TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_shell_command.sql co/sql/co_views_sys_shell_command.sql
+--- co.orig/sql/co_views_sys_shell_command.sql	Fri Jan 10 14:54:46 2003
++++ co/sql/co_views_sys_shell_command.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_shell_command AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_shell_command TO nobody   
++ GRANT ALL ON  cov_sys_shell_command TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_spreadsheet.sql co/sql/co_views_sys_spreadsheet.sql
+--- co.orig/sql/co_views_sys_spreadsheet.sql	Fri Jan 10 14:54:17 2003
++++ co/sql/co_views_sys_spreadsheet.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       , cof_sys_spreadsheet_cols(c) AS cols  , cof_sys_spreadsheet_rows(c) AS rows  FROM  co_sys_spreadsheet AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_spreadsheet TO nobody   
++ GRANT ALL ON  cov_sys_spreadsheet TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_spreadsheet_cell.sql co/sql/co_views_sys_spreadsheet_cell.sql
+--- co.orig/sql/co_views_sys_spreadsheet_cell.sql	Fri Jan 10 14:54:23 2003
++++ co/sql/co_views_sys_spreadsheet_cell.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       , cof_sys_spreadsheet_cell_column_number(c) AS column_number  , cof_sys_spreadsheet_cell_row_number(c) AS row_number  FROM  co_sys_spreadsheet_cell AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_spreadsheet_cell TO nobody   
++ GRANT ALL ON  cov_sys_spreadsheet_cell TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_spreadsheet_cevent.sql co/sql/co_views_sys_spreadsheet_cevent.sql
+--- co.orig/sql/co_views_sys_spreadsheet_cevent.sql	Fri Jan 10 14:54:28 2003
++++ co/sql/co_views_sys_spreadsheet_cevent.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_spreadsheet_cevent AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_spreadsheet_cevent TO nobody   
++ GRANT ALL ON  cov_sys_spreadsheet_cevent TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_spreadsheet_column.sql co/sql/co_views_sys_spreadsheet_column.sql
+--- co.orig/sql/co_views_sys_spreadsheet_column.sql	Fri Jan 10 14:53:35 2003
++++ co/sql/co_views_sys_spreadsheet_column.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       , cof_sys_spreadsheet_column_length(c) AS length  FROM  co_sys_spreadsheet_column AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_spreadsheet_column TO nobody   
++ GRANT ALL ON  cov_sys_spreadsheet_column TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_spreadsheet_rectangle.sql co/sql/co_views_sys_spreadsheet_rectangle.sql
+--- co.orig/sql/co_views_sys_spreadsheet_rectangle.sql	Fri Jan 10 14:54:30 2003
++++ co/sql/co_views_sys_spreadsheet_rectangle.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_spreadsheet_rectangle AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_spreadsheet_rectangle TO nobody   
++ GRANT ALL ON  cov_sys_spreadsheet_rectangle TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_spreadsheet_row.sql co/sql/co_views_sys_spreadsheet_row.sql
+--- co.orig/sql/co_views_sys_spreadsheet_row.sql	Fri Jan 10 14:53:40 2003
++++ co/sql/co_views_sys_spreadsheet_row.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       , cof_sys_spreadsheet_row_length(c) AS length  FROM  co_sys_spreadsheet_row AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_spreadsheet_row TO nobody   
++ GRANT ALL ON  cov_sys_spreadsheet_row TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_sys_text_document.sql co/sql/co_views_sys_text_document.sql
+--- co.orig/sql/co_views_sys_text_document.sql	Fri Jan 10 14:54:37 2003
++++ co/sql/co_views_sys_text_document.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_sys_text_document AS c 
+                !GO 
+- GRANT ALL ON  cov_sys_text_document TO nobody   
++ GRANT ALL ON  cov_sys_text_document TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_app_action.sql co/sql/co_views_usr_app_action.sql
+--- co.orig/sql/co_views_usr_app_action.sql	Fri Jan 10 14:54:45 2003
++++ co/sql/co_views_usr_app_action.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_app_action AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_app_action TO nobody   
++ GRANT ALL ON  cov_usr_app_action TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_catalog.sql co/sql/co_views_usr_catalog.sql
+--- co.orig/sql/co_views_usr_catalog.sql	Fri Jan 10 14:52:41 2003
++++ co/sql/co_views_usr_catalog.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_catalog AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_catalog TO nobody   
++ GRANT ALL ON  cov_usr_catalog TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_catalog_root.sql co/sql/co_views_usr_catalog_root.sql
+--- co.orig/sql/co_views_usr_catalog_root.sql	Fri Jan 10 14:52:45 2003
++++ co/sql/co_views_usr_catalog_root.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_catalog_root AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_catalog_root TO nobody   
++ GRANT ALL ON  cov_usr_catalog_root TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_catalog_type.sql co/sql/co_views_usr_catalog_type.sql
+--- co.orig/sql/co_views_usr_catalog_type.sql	Fri Jan 10 14:52:43 2003
++++ co/sql/co_views_usr_catalog_type.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_catalog_type AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_catalog_type TO nobody   
++ GRANT ALL ON  cov_usr_catalog_type TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_clipboard.sql co/sql/co_views_usr_clipboard.sql
+--- co.orig/sql/co_views_usr_clipboard.sql	Fri Jan 10 14:52:58 2003
++++ co/sql/co_views_usr_clipboard.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_clipboard AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_clipboard TO nobody   
++ GRANT ALL ON  cov_usr_clipboard TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_file.sql co/sql/co_views_usr_file.sql
+--- co.orig/sql/co_views_usr_file.sql	Fri Jan 10 14:52:51 2003
++++ co/sql/co_views_usr_file.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_file AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_file TO nobody   
++ GRANT ALL ON  cov_usr_file TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_generic.sql co/sql/co_views_usr_generic.sql
+--- co.orig/sql/co_views_usr_generic.sql	Fri Jan 10 14:52:10 2003
++++ co/sql/co_views_usr_generic.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_generic AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_generic TO nobody   
++ GRANT ALL ON  cov_usr_generic TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_generic_acl.sql co/sql/co_views_usr_generic_acl.sql
+--- co.orig/sql/co_views_usr_generic_acl.sql	Fri Jan 10 14:52:23 2003
++++ co/sql/co_views_usr_generic_acl.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_generic_acl AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_generic_acl TO nobody   
++ GRANT ALL ON  cov_usr_generic_acl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_generic_iacl.sql co/sql/co_views_usr_generic_iacl.sql
+--- co.orig/sql/co_views_usr_generic_iacl.sql	Fri Jan 10 14:52:28 2003
++++ co/sql/co_views_usr_generic_iacl.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_generic_iacl AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_generic_iacl TO nobody   
++ GRANT ALL ON  cov_usr_generic_iacl TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_js_code.sql co/sql/co_views_usr_js_code.sql
+--- co.orig/sql/co_views_usr_js_code.sql	Fri Jan 10 14:53:02 2003
++++ co/sql/co_views_usr_js_code.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_js_code AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_js_code TO nobody   
++ GRANT ALL ON  cov_usr_js_code TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_js_lib.sql co/sql/co_views_usr_js_lib.sql
+--- co.orig/sql/co_views_usr_js_lib.sql	Fri Jan 10 14:53:03 2003
++++ co/sql/co_views_usr_js_lib.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_js_lib AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_js_lib TO nobody   
++ GRANT ALL ON  cov_usr_js_lib TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_label_class.sql co/sql/co_views_usr_label_class.sql
+--- co.orig/sql/co_views_usr_label_class.sql	Fri Jan 10 14:53:19 2003
++++ co/sql/co_views_usr_label_class.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_label_class AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_label_class TO nobody   
++ GRANT ALL ON  cov_usr_label_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_label_prop.sql co/sql/co_views_usr_label_prop.sql
+--- co.orig/sql/co_views_usr_label_prop.sql	Fri Jan 10 14:53:20 2003
++++ co/sql/co_views_usr_label_prop.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_label_prop AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_label_prop TO nobody   
++ GRANT ALL ON  cov_usr_label_prop TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_label_relation.sql co/sql/co_views_usr_label_relation.sql
+--- co.orig/sql/co_views_usr_label_relation.sql	Fri Jan 10 14:53:21 2003
++++ co/sql/co_views_usr_label_relation.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_label_relation AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_label_relation TO nobody   
++ GRANT ALL ON  cov_usr_label_relation TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_menu.sql co/sql/co_views_usr_menu.sql
+--- co.orig/sql/co_views_usr_menu.sql	Fri Jan 10 14:53:08 2003
++++ co/sql/co_views_usr_menu.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_menu AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_menu TO nobody   
++ GRANT ALL ON  cov_usr_menu TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_menu_action.sql co/sql/co_views_usr_menu_action.sql
+--- co.orig/sql/co_views_usr_menu_action.sql	Fri Jan 10 14:53:10 2003
++++ co/sql/co_views_usr_menu_action.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_menu_action AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_menu_action TO nobody   
++ GRANT ALL ON  cov_usr_menu_action TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_menu_action_param.sql co/sql/co_views_usr_menu_action_param.sql
+--- co.orig/sql/co_views_usr_menu_action_param.sql	Fri Jan 10 14:53:12 2003
++++ co/sql/co_views_usr_menu_action_param.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_menu_action_param AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_menu_action_param TO nobody   
++ GRANT ALL ON  cov_usr_menu_action_param TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_meta_class.sql co/sql/co_views_usr_meta_class.sql
+--- co.orig/sql/co_views_usr_meta_class.sql	Fri Jan 10 14:53:14 2003
++++ co/sql/co_views_usr_meta_class.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_meta_class AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_meta_class TO nobody   
++ GRANT ALL ON  cov_usr_meta_class TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_meta_method.sql co/sql/co_views_usr_meta_method.sql
+--- co.orig/sql/co_views_usr_meta_method.sql	Fri Jan 10 14:53:15 2003
++++ co/sql/co_views_usr_meta_method.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_meta_method AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_meta_method TO nobody   
++ GRANT ALL ON  cov_usr_meta_method TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_meta_prop.sql co/sql/co_views_usr_meta_prop.sql
+--- co.orig/sql/co_views_usr_meta_prop.sql	Fri Jan 10 14:53:17 2003
++++ co/sql/co_views_usr_meta_prop.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_meta_prop AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_meta_prop TO nobody   
++ GRANT ALL ON  cov_usr_meta_prop TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_meta_vtable.sql co/sql/co_views_usr_meta_vtable.sql
+--- co.orig/sql/co_views_usr_meta_vtable.sql	Fri Jan 10 14:53:18 2003
++++ co/sql/co_views_usr_meta_vtable.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_meta_vtable AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_meta_vtable TO nobody   
++ GRANT ALL ON  cov_usr_meta_vtable TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_picture.sql co/sql/co_views_usr_picture.sql
+--- co.orig/sql/co_views_usr_picture.sql	Fri Jan 10 14:53:25 2003
++++ co/sql/co_views_usr_picture.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_picture AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_picture TO nobody   
++ GRANT ALL ON  cov_usr_picture TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_profiler.sql co/sql/co_views_usr_profiler.sql
+--- co.orig/sql/co_views_usr_profiler.sql	Fri Jan 10 14:53:28 2003
++++ co/sql/co_views_usr_profiler.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_profiler AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_profiler TO nobody   
++ GRANT ALL ON  cov_usr_profiler TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_report.sql co/sql/co_views_usr_report.sql
+--- co.orig/sql/co_views_usr_report.sql	Fri Jan 10 14:54:42 2003
++++ co/sql/co_views_usr_report.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_report AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_report TO nobody   
++ GRANT ALL ON  cov_usr_report TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_report_element.sql co/sql/co_views_usr_report_element.sql
+--- co.orig/sql/co_views_usr_report_element.sql	Fri Jan 10 14:54:43 2003
++++ co/sql/co_views_usr_report_element.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_report_element AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_report_element TO nobody   
++ GRANT ALL ON  cov_usr_report_element TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_sdoc.sql co/sql/co_views_usr_sdoc.sql
+--- co.orig/sql/co_views_usr_sdoc.sql	Fri Jan 10 14:54:47 2003
++++ co/sql/co_views_usr_sdoc.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_sdoc AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_sdoc TO nobody   
++ GRANT ALL ON  cov_usr_sdoc TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_sdoc_tag.sql co/sql/co_views_usr_sdoc_tag.sql
+--- co.orig/sql/co_views_usr_sdoc_tag.sql	Fri Jan 10 14:54:48 2003
++++ co/sql/co_views_usr_sdoc_tag.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_sdoc_tag AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_sdoc_tag TO nobody   
++ GRANT ALL ON  cov_usr_sdoc_tag TO http   
+                  !GO 
+diff -urN co.orig/sql/co_views_usr_shell_command.sql co/sql/co_views_usr_shell_command.sql
+--- co.orig/sql/co_views_usr_shell_command.sql	Fri Jan 10 14:54:46 2003
++++ co/sql/co_views_usr_shell_command.sql	Thu Mar 20 13:18:02 2003
+@@ -4,5 +4,5 @@
+      SELECT * 
+       FROM  co_usr_shell_command AS c 
+                !GO 
+- GRANT ALL ON  cov_usr_shell_command TO nobody   
++ GRANT ALL ON  cov_usr_shell_command TO http   
+                  !GO 
+diff -urN co.orig/sql/go-sql co/sql/go-sql
+--- co.orig/sql/go-sql	Wed Jun 21 10:58:54 2000
++++ co/sql/go-sql	Thu Mar 20 13:18:02 2003
+@@ -1,6 +1,6 @@
+ #this bash script executes SQL code from .sql files
+ 
+-DATABASE_NAME="nobody"
++DATABASE_NAME="http"
+ SQL_PATH="/usr/local/pgsql/bin"
+ SQL_FILES=$(ls *.sql *.noauto | sort)
+ 
+@@ -9,8 +9,8 @@
+ 
+ # OPTIONAL !!
+ #/etc/rc.d/init.d/httpd stop
+-#$SQL_PATH/dropdb nobody
+-#$SQL_PATH/createdb nobody
++#$SQL_PATH/dropdb http
++#$SQL_PATH/createdb http
+ #/etc/rc.d/init.d/httpd start 
+ 
+ rm sql_messages.log sql_errors.log
+@@ -35,4 +35,4 @@
+ done
+ 
+ echo "analizing and cleaning"
+-vacuumdb --verbose --analyze  nobody
++vacuumdb --verbose --analyze  http
+diff -urN co.orig/sql/go-sql-module co/sql/go-sql-module
+--- co.orig/sql/go-sql-module	Thu Jul 20 11:04:09 2000
++++ co/sql/go-sql-module	Thu Mar 20 13:18:02 2003
+@@ -1,6 +1,6 @@
+ #this bash script executes SQL code from .sql files
+ 
+-DATABASE_NAME="nobody"
++DATABASE_NAME="http"
+ SQL_PATH="/usr/local/pgsql/bin"
+ SQL_FILES=$(ls *_$1.sql *_$1.noauto | sort)
+ #ls *_$1.* | sort
+diff -urN co.orig/sql/go_sql_debug co/sql/go_sql_debug
+--- co.orig/sql/go_sql_debug	Mon Aug 14 13:13:57 2000
++++ co/sql/go_sql_debug	Thu Mar 20 13:18:02 2003
+@@ -1,6 +1,6 @@
+ #this bash script executes SQL code from .sql files
+ 
+-DATABASE_NAME="nobody"
++DATABASE_NAME="http"
+ ##SQL_PATH="/usr/local/pgsql/bin"
+ SQL_FILES=$(ls *.sql *.noauto | sort)
+ 
+@@ -9,8 +9,8 @@
+ 
+ # OPTIONAL !!
+ #/etc/rc.d/init.d/httpd stop
+-#$SQL_PATH/dropdb nobody
+-#$SQL_PATH/createdb nobody
++#$SQL_PATH/dropdb http
++#$SQL_PATH/createdb http
+ #/etc/rc.d/init.d/httpd start 
+ 
+ rm sql_messages.log sql_errors.log
+@@ -27,4 +27,4 @@
+ done
+ 
+ echo "analizing and cleaning"
+-vacuumdb --verbose --analyze  nobody
++vacuumdb --verbose --analyze  http
+diff -urN co.orig/sql/sql_run.pl co/sql/sql_run.pl
+--- co.orig/sql/sql_run.pl	Mon Aug 14 13:13:57 2000
++++ co/sql/sql_run.pl	Thu Mar 20 13:18:02 2003
+@@ -14,8 +14,8 @@
+  
+ ######################### End of black magic.
+  
+-my $dbconnstr = 'dbname=nobody';
+-##my $dbname = 'nobody';
++my $dbconnstr = 'dbname=http';
++##my $dbname = 'http';
+ my $trace  = '/tmp/pgtrace.out';
+ my ($conn, $result, $i, $last_id);
+  
