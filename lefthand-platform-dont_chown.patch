@@ -1,0 +1,11 @@
+diff -urN co.orig/comodules/Makefile.rules.in co/comodules/Makefile.rules.in
+--- co.orig/comodules/Makefile.rules.in	Mon Aug 14 13:09:58 2000
++++ co/comodules/Makefile.rules.in	Tue Mar 11 15:24:00 2003
+@@ -86,7 +86,6 @@
+ 	if test "$(FSQLSO)" ; then \
+ 	install -d $(PGINSTDIR)/lib/co ; \
+ 	cp -f $< $(PGINSTDIR)/lib/co ;\
+-	chown -R postgres.postgres $(PGINSTDIR)/lib/co ;\
+ 	fi
+ 
+ $(FSQLOBJ): %.o: %.c

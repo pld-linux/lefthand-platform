@@ -1,0 +1,17 @@
+diff -urN co.orig/coffice/Makefile.in co/coffice/Makefile.in
+--- co.orig/coffice/Makefile.in	Thu Jan  9 15:54:02 2003
++++ co/coffice/Makefile.in	Wed Mar 12 15:15:05 2003
+@@ -48,7 +48,6 @@
+ #   install the DSO file into the Apache installation
+ #   and activate it in the Apache configuration
+ install: all
+-	$(INSTALLMOD) mod_coffice.so
+ 
+ #   cleanup
+ clean:
+@@ -60,5 +59,4 @@
+ 
+ #   reload the module by installing and restarting Apache
+ reload: install
+-	$(MAKE) restart
+ 

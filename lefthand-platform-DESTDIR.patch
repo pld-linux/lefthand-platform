@@ -1,0 +1,61 @@
+diff -urN co.orig/comodules/Makefile.rules.in co/comodules/Makefile.rules.in
+--- co.orig/comodules/Makefile.rules.in	Wed Mar 12 09:25:12 2003
++++ co/comodules/Makefile.rules.in	Wed Mar 12 09:29:19 2003
+@@ -76,16 +76,16 @@
+ 	gcc -E -C -P -x 'c' $(CPPFLAGS) $(TCPPFLAGS) $(INCLUDES) -o $@ $<
+ 
+ data: $(CONAME)_init.i
+-	install -d ${sql_dir}
++	install -d $(DESTDIR)${sql_dir}
+ 	#perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(DATA_TEMPL) $(CONAME)_init.i
+ 	perl -I${temp_tools_dir} $(DATA_TEMPL) $(CONAME)_init.i
+ 	@chmod +x co_set*.pl 2>/dev/null || echo 'No data generated'
+-	@cp co_set*.pl ${sql_dir} 2>/dev/null || :
++	@cp co_set*.pl $(DESTDIR)${sql_dir} 2>/dev/null || :
+ 
+ fsql: $(FSQLSO)
+ 	if test "$(FSQLSO)" ; then \
+-	install -d $(PGINSTDIR)/lib/co ; \
+-	cp -f $< $(PGINSTDIR)/lib/co ;\
++	install -d $(DESTDIR)$(PGINSTDIR)/lib/co ; \
++	cp -f $< $(DESTDIR)$(PGINSTDIR)/lib/co ;\
+ 	fi
+ 
+ $(FSQLOBJ): %.o: %.c
+@@ -98,10 +98,10 @@
+ 	touch $(CONAME)_init.t
+ 
+ install-sql: $(CONAME).i $(SQL_TEMPL) $(JEEVESCUSTOMLIBS) data
+-	install -d ${sql_dir}
++	install -d $(DESTDIR)${sql_dir}
+ 	#perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(SQL_TEMPL) $(CONAME).i
+ 	perl -I${temp_tools_dir} $(SQL_TEMPL) $(CONAME).i
+-	@(cp co_*.sql ${sql_dir} || echo 'No SQL found')
++	@(cp co_*.sql $(DESTDIR)${sql_dir} || echo 'No SQL found')
+ 
+ install-doc: $(CONAME).i $(DOC_TEMPL) $(JEEVESCUSTOMLIBS)
+ 	if [ -d "${doc_dir}/main_classes/${CONAME}" ] ; then \
+@@ -109,17 +109,17 @@
+ 	else \
+ 	mkdir ${doc_dir}/main_classes/${CONAME} ; \
+ 	fi
+-	install -d ${doc_dir}
++	install -d $(DESTDIR)${doc_dir}
+ 	perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(DOC_TEMPL) $(CONAME).i
+-	@(mv *.doc.html ${doc_dir}/main_classes/${CONAME} || echo 'No docs found')
++	@(mv *.doc.html $(DESTDIR)${doc_dir}/main_classes/${CONAME} || echo 'No docs found')
+ 
+ install-js:
+-	install -d ${js_dir}
+-	cp *.js ${js_dir}
++	install -d $(DESTDIR)${js_dir}
++	cp *.js $(DESTDIR)${js_dir}
+ 
+ install-so:
+-	install -d ${so_dir}
+-	cp *.so ${so_dir}
++	install -d $(DESTDIR)${so_dir}
++	cp *.so $(DESTDIR)${so_dir}
+ 
+ install-asp:
+ ##	install -d $(COROOTDIR)/$(CONAME)

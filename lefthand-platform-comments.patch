@@ -1,0 +1,33 @@
+diff -urN co.orig/comodules/acl/acl_init.t co/comodules/acl/acl_init.t
+--- co.orig/comodules/acl/acl_init.t	Mon Nov 25 17:15:32 2002
++++ co/comodules/acl/acl_init.t	Wed Mar 12 14:25:15 2003
+@@ -7,7 +7,7 @@
+   %%
+ 
+ #if 0
+-  ##creating acls for classes in meta_class and all objects but not for acl
++  // creating acls for classes in meta_class and all objects but not for acl
+ 
+   my(@area) = ('sec', 'sys', 'usr' );
+ 
+@@ -45,7 +45,7 @@
+ 			  where r.name = 'root'
+ 		    ");
+ 
+-  ## creating acls for server_event scripts
++  // creating acls for server_event scripts
+ 
+   $result = $conn->exec(" insert into co_sec_acl(id_permission,id_object,id_role,area,class_name)
+ 			  select
+diff -urN co.orig/comodules/acl_class/acl_class_init.t co/comodules/acl_class/acl_class_init.t
+--- co.orig/comodules/acl_class/acl_class_init.t	Mon Nov 25 17:16:44 2002
++++ co/comodules/acl_class/acl_class_init.t	Wed Mar 12 14:25:46 2003
+@@ -5,7 +5,7 @@
+  
+   escape_perl
+   %%
+-  ##creating acl_class for all classes in meta_class and for role root
++  // creating acl_class for all classes in meta_class and for role root
+ 
+   $result = $conn->exec(" insert into co_sec_acl_class 
+                           select NEXTVAL('co_sec_acl_class_sqid'), 0, 0, p.id, r.id, 'sec', c.class_name 
