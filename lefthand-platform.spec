@@ -1,17 +1,18 @@
 # TODO:
-# - summary and desc and group
+# - desc and group
 # - patch mod_coffice to work properly with our apache (auth)
+
 %define         arname          mod_coffice
 %define         mod_name        coffice
 %define         apxs            /usr/sbin/apxs
 %define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
 %define         _sysconfdir     /etc/httpd
 
-Summary:	ble
-Summary(pl):	ble pl
+Summary:	LeftHand 1.0 Platform
+Summary(pl):	Platforma LeftHand 1.0
 Name:		lefthand-platform
 Version:	1.0.2
-Release:	0.5
+Release:	0.6
 License:	GPL
 Group:		niewiem
 Source0:	lefthand-%{version}.tar.gz
@@ -37,7 +38,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 ble
 
 %description -l pl
-ble pl
+Platforma LeftHand 1.0 - zestaw bibliotek, narzêdzi i metodologii do
+tworzenia w³a¶ciwych aplikacji, typu aplikacja Firma. Platforma
+zapewnia takie elementy jak, na przyk³ad, dostêp do bazy danych,
+warstwê komunikacji przez Internet, system u¿ytkowników i ról, czy
+mechanizmy kontroli bezpieczeñstwa.
 
 %prep
 %setup -q -n co
