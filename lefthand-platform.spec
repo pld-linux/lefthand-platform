@@ -1,4 +1,5 @@
 # TODO:
+# - better patch to find postgresql version by configure
 # - desc and group
 # - patch mod_coffice to work properly with our apache (auth)
 # - move some files from /etc/httpd
@@ -14,7 +15,7 @@ Summary:	LeftHand 1.0 Platform
 Summary(pl):	Platforma LeftHand 1.0
 Name:		lefthand-platform
 Version:	1.0.2
-Release:	0.6
+Release:	0.7
 License:	GPL
 Group:		niewiem
 Source0:	lefthand-%{version}.tar.gz
@@ -22,6 +23,7 @@ Patch0:		%{name}-dont_chown.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-comments.patch
 Patch3:		%{name}-install.patch
+Patch4:		%{name}-ac_fix_postgres.patch
 URL:		http://www.lefthand.com.pl/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -52,17 +54,21 @@ mechanizmy kontroli bezpieczeñstwa.
 %patch1	-p1
 %patch2	-p1
 %patch3	-p1
+%patch4	-p1
 
 %build
+%{__aclocal}
+%{__autoconf}
 LDFLAGS=' '; export LDFLAGS
-%configure2_13 \
+%configure \
 	--with-libs="%{_libdir}" \
 	--with-includes="%{_includedir}/js %{_includedir} %{_includedir}/postgresql/server %{_includedir}/postgresql/internal" \
 	--with-postgresql="%{_prefix}" \
 	--with-postgresql-inc="%{_includedir}/postgresql" \
 	--with-apachectl="%{_sbindir}/httpd " \
 	--with-apachectl="/etc/rc.d/init.d/httpd" \
-	--with-apache-libexecdir="%{_pkglibdir}"
+	--with-apache-libexecdir="%{_pkglibdir}" \
+	--with-database="http"
 
 %{__make} -C comodules clean
 %{__make} -C coffice clean
