@@ -19,7 +19,7 @@ Group:		niewiem
 # extracted from
 # http://www.lefthand.com.pl/download/firma/lefthand-1.1-all.tar.gz
 Source0:	lefthand-%{version}.tar.gz
-# Source0-md5:	68e84ad6037828b4c132b6b41e366387
+# Source0-md5:	cba23742c2fdde1a77288ff524516450
 Patch0:		%{name}-dont_chown.patch
 Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-comments.patch
