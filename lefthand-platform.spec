@@ -28,6 +28,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	texinfo
 BuildRequires:	js-devel
+BuildRequires:	apache(EAPI)-devel >= 1.3.12
 PreReq:		apache(EAPI) >= 1.3.12
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
