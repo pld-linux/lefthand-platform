@@ -1,9 +1,7 @@
 # TODO:
 # - better patch to find postgresql version by configure
-# - desc and group
+# - group
 # - move some files from /etc/httpd
-# - FHS compliance (what is /sql ???)
-# - switch to standard postgresql
 
 %define         arname          mod_coffice
 %define         mod_name        coffice
@@ -15,7 +13,7 @@ Summary:	LeftHand 1.1 Platform
 Summary(pl):	Platforma LeftHand 1.1
 Name:		lefthand-platform
 Version:	1.1
-Release:	0.2
+Release:	0.3
 License:	GPL
 Group:		niewiem
 # extracted from
@@ -28,7 +26,7 @@ Patch2:		%{name}-comments.patch
 Patch3:		%{name}-install.patch
 Patch4:		%{name}-ac_fix_postgres.patch
 #Patch5:		%{name}-mod_coffice.patch
-#Patch6:		%{name}-postgresql.patch
+Patch6:		%{name}-postgresql.patch
 URL:		http://www.lefthand.com.pl/
 BuildRequires:	apache(EAPI)-devel >= 1.3.12
 BuildRequires:	autoconf
@@ -65,7 +63,7 @@ mechanizmy kontroli bezpieczeñstwa.
 %patch3	-p1
 %patch4	-p1
 #%patch5	-p1
-#%patch6	-p1
+%patch6	-p1
 
 %build
 %{__aclocal}
