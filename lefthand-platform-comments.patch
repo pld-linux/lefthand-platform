@@ -10,15 +10,6 @@ diff -urN co.orig/comodules/acl/acl_init.t co/comodules/acl/acl_init.t
  
    my(@area) = ('sec', 'sys', 'usr' );
  
-@@ -45,7 +45,7 @@
- 			  where r.name = 'root'
- 		    ");
- 
--  ## creating acls for server_event scripts
-+  // creating acls for server_event scripts
- 
-   $result = $conn->exec(" insert into co_sec_acl(id_permission,id_object,id_role,area,class_name)
- 			  select
 diff -urN co.orig/comodules/acl_class/acl_class_init.t co/comodules/acl_class/acl_class_init.t
 --- co.orig/comodules/acl_class/acl_class_init.t	Mon Nov 25 17:16:44 2002
 +++ co/comodules/acl_class/acl_class_init.t	Wed Mar 12 14:25:46 2003

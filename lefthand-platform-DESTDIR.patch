@@ -8,7 +8,7 @@ diff -urN co.orig/comodules/Makefile.rules.in co/comodules/Makefile.rules.in
 -	install -d ${sql_dir}
 +	install -d $(DESTDIR)${sql_dir}
  	#perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(DATA_TEMPL) $(CONAME)_init.i
- 	perl -I${temp_tools_dir} $(DATA_TEMPL) $(CONAME)_init.i
+ 	perl -I${temp_tools_dir} $(DATA_TEMPL) $(CONAME)_init.i ${AREA}
  	@chmod +x co_set*.pl 2>/dev/null || echo 'No data generated'
 -	@cp co_set*.pl ${sql_dir} 2>/dev/null || :
 +	@cp co_set*.pl $(DESTDIR)${sql_dir} 2>/dev/null || :
@@ -29,7 +29,7 @@ diff -urN co.orig/comodules/Makefile.rules.in co/comodules/Makefile.rules.in
 -	install -d ${sql_dir}
 +	install -d $(DESTDIR)${sql_dir}
  	#perl -I${JEEVESLIBDIR} -I${JEEVESTEMPLATEDIR} $(PFLAGS) ${JEEVESEXE} -s co -t $(SQL_TEMPL) $(CONAME).i
- 	perl -I${temp_tools_dir} $(SQL_TEMPL) $(CONAME).i
+ 	perl -I${temp_tools_dir} $(SQL_TEMPL) $(CONAME).i ${AREA}
 -	@(cp co_*.sql ${sql_dir} || echo 'No SQL found')
 +	@(cp co_*.sql $(DESTDIR)${sql_dir} || echo 'No SQL found')
  
