@@ -3,11 +3,11 @@
 # - group
 # - move some files from /etc/httpd
 
-%define         arname          mod_coffice
-%define         mod_name        coffice
-%define         apxs            /usr/sbin/apxs
-%define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
-%define         _sysconfdir     /etc/httpd
+%define		arname		mod_coffice
+%define		mod_name	coffice
+%define		apxs		/usr/sbin/apxs
+%define		_pkglibdir	%(%{apxs} -q LIBEXECDIR)
+%define		_sysconfdir	/etc/httpd
 
 Summary:	LeftHand 1.1 Platform
 Summary(pl):	Platforma LeftHand 1.1
@@ -102,23 +102,23 @@ rm -rf $RPM_BUILD_ROOT
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
 if [ -f %{_sysconfdir}/httpd.conf ] && \
-        ! grep -q "^Include.*/%{arname}.conf" %{_sysconfdir}/httpd.conf; then
-                echo "Include %{_sysconfdir}/%{arname}.conf" >>%{_sysconfdir}/httpd.conf
+     ! grep -q "^Include.*/%{arname}.conf" %{_sysconfdir}/httpd.conf; then
+	echo "Include %{_sysconfdir}/%{arname}.conf" >>%{_sysconfdir}/httpd.conf
 fi
 if [ -f /var/lock/subsys/httpd ]; then
-        /etc/rc.d/init.d/httpd restart 1>&2
+	/etc/rc.d/init.d/httpd restart 1>&2
 fi
 
 %preun
 if [ "$1" = "0" ]; then
-        %{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
-        umask 027
-        grep -E -v "^Include.*%{arname}.conf" %{_sysconfdir}/httpd.conf > \
-                %{_sysconfdir}/httpd.conf.tmp
-        mv -f %{_sysconfdir}/httpd.conf.tmp %{_sysconfdir}/httpd.conf
-        if [ -f /var/lock/subsys/httpd ]; then
-                /etc/rc.d/init.d/httpd restart 1>&2
-        fi
+	%{apxs} -e -A -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
+	umask 027
+	grep -E -v "^Include.*%{arname}.conf" %{_sysconfdir}/httpd.conf > \
+		%{_sysconfdir}/httpd.conf.tmp
+	mv -f %{_sysconfdir}/httpd.conf.tmp %{_sysconfdir}/httpd.conf
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd restart 1>&2
+	fi
 fi
 
 %files
