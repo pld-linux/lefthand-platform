@@ -11,13 +11,15 @@
 %define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
 %define         _sysconfdir     /etc/httpd
 
-Summary:	LeftHand 1.0 Platform
-Summary(pl):	Platforma LeftHand 1.0
+Summary:	LeftHand 1.1 Platform
+Summary(pl):	Platforma LeftHand 1.1
 Name:		lefthand-platform
-Version:	1.0.2
-Release:	0.9
+Version:	1.1
+Release:	0.2
 License:	GPL
 Group:		niewiem
+# extracted from
+# http://www.lefthand.com.pl/download/firma/lefthand-1.1-all.tar.gz
 Source0:	lefthand-%{version}.tar.gz
 # Source0-md5:	68e84ad6037828b4c132b6b41e366387
 Patch0:		%{name}-dont_chown.patch
@@ -25,8 +27,8 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-comments.patch
 Patch3:		%{name}-install.patch
 Patch4:		%{name}-ac_fix_postgres.patch
-Patch5:		%{name}-mod_coffice.patch
-Patch6:		%{name}-postgresql.patch
+#Patch5:		%{name}-mod_coffice.patch
+#Patch6:		%{name}-postgresql.patch
 URL:		http://www.lefthand.com.pl/
 BuildRequires:	apache(EAPI)-devel >= 1.3.12
 BuildRequires:	autoconf
@@ -42,14 +44,14 @@ Requires(preun):	fileutils
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-LeftHand Platform 1.0 is a set of libraries, utilities and
+LeftHand Platform 1.1 is a set of libraries, utilities and
 metodologies designed for creating applications like Firma. The
 platform provides features like database access, Internet
 communication layer, users and roles system and security control
 mechanisms.
 
 %description -l pl
-Platforma LeftHand 1.0 - zestaw bibliotek, narzêdzi i metodologii do
+Platforma LeftHand 1.1 - zestaw bibliotek, narzêdzi i metodologii do
 tworzenia w³a¶ciwych aplikacji, typu aplikacja Firma. Platforma
 zapewnia takie elementy jak, na przyk³ad, dostêp do bazy danych,
 warstwê komunikacji przez Internet, system u¿ytkowników i ról, czy
@@ -62,8 +64,8 @@ mechanizmy kontroli bezpieczeñstwa.
 %patch2	-p1
 %patch3	-p1
 %patch4	-p1
-%patch5	-p1
-%patch6	-p1
+#%patch5	-p1
+#%patch6	-p1
 
 %build
 %{__aclocal}
@@ -79,13 +81,13 @@ LDFLAGS=' '; export LDFLAGS
 	--with-apache-libexecdir="%{_pkglibdir}" \
 	--with-database="http"
 
-%{__make} -C comodules clean
-%{__make} -C coffice clean
+#%{__make} -C comodules clean
+#%{__make} -C coffice clean
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} -C comodules install DESTDIR="$RPM_BUILD_ROOT/"
-%{__make} -C coffice install DESTDIR="$RPM_BUILD_ROOT/"
+%{__make} -C comodules install DESTDIR="$RPM_BUILD_ROOT"
+%{__make} -C coffice install DESTDIR="$RPM_BUILD_ROOT"
 
 install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_includedir}/co,/opt/co/html,/opt/co/datafiles/sys/attachment,/opt/co/datafiles/sys/text_document}
 install coffice/mod_coffice.so $RPM_BUILD_ROOT%{_pkglibdir}
@@ -135,7 +137,7 @@ fi
 %{_pkglibdir}/*.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{arname}.conf
 # FIXME: FHS
-/sql
+#/sql
 %{_includedir}/co
 %dir /opt/co
 %dir /opt/co/datafiles
