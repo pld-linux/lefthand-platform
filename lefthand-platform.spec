@@ -1,7 +1,6 @@
 # TODO:
 # - better patch to find postgresql version by configure
 # - desc and group
-# - patch mod_coffice to work properly with our apache (auth)
 # - move some files from /etc/httpd
 
 %define         arname          mod_coffice
@@ -9,13 +8,12 @@
 %define         apxs            /usr/sbin/apxs
 %define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
 %define         _sysconfdir     /etc/httpd
-%define		_noautocompressdoc	*.sql *.pl Makefile Makefile.in
 
 Summary:	LeftHand 1.0 Platform
 Summary(pl):	Platforma LeftHand 1.0
 Name:		lefthand-platform
 Version:	1.0.2
-Release:	0.7
+Release:	0.8
 License:	GPL
 Group:		niewiem
 Source0:	lefthand-%{version}.tar.gz
@@ -24,6 +22,8 @@ Patch1:		%{name}-DESTDIR.patch
 Patch2:		%{name}-comments.patch
 Patch3:		%{name}-install.patch
 Patch4:		%{name}-ac_fix_postgres.patch
+Patch5:		%{name}-mod_coffice.patch
+Patch6:		%{name}-postgresql.patch
 URL:		http://www.lefthand.com.pl/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -55,6 +55,8 @@ mechanizmy kontroli bezpieczeñstwa.
 %patch2	-p1
 %patch3	-p1
 %patch4	-p1
+%patch5	-p1
+%patch6	-p1
 
 %build
 %{__aclocal}
@@ -75,12 +77,13 @@ LDFLAGS=' '; export LDFLAGS
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} -C comodules install DESTDIR=$RPM_BUILD_ROOT
-%{__make} -C coffice install DESTDIR=$RPM_BUILD_ROOT
+%{__make} -C comodules install DESTDIR="$RPM_BUILD_ROOT/"
+%{__make} -C coffice install DESTDIR="$RPM_BUILD_ROOT/"
 
-install -d $RPM_BUILD_ROOT%{_pkglibdir}
+install -d $RPM_BUILD_ROOT{%{_pkglibdir},%{_includedir}/co}
 install coffice/mod_coffice.so $RPM_BUILD_ROOT%{_pkglibdir}
 install config/co.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{arname}.conf
+install include/*.h $RPM_BUILD_ROOT%{_includedir}/co
 
 %post
 %{apxs} -e -a -n %{mod_name} %{_pkglibdir}/mod_%{mod_name}.so 1>&2
@@ -105,13 +108,15 @@ if [ "$1" = "0" ]; then
 fi
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc sql
+#%doc sql
 %attr(755,postgres,postgres) %{_libdir}/co/fsql_catalog.so
 %{_sysconfdir}/co_javascript/*.js
 %{_sysconfdir}/co_modules/*.so
 %{_pkglibdir}/*.so
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{arname}.conf
+/sql
+%{_includedir}/co
