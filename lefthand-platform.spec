@@ -23,7 +23,7 @@ Patch2:		%{name}-comments.patch
 Patch3:		%{name}-install.patch
 Patch4:		%{name}-ac_fix_postgres.patch
 Patch5:		%{name}-mod_coffice.patch
-Patch6:		%{name}-postgresql.patch.gz
+Patch6:		%{name}-postgresql.patch
 URL:		http://www.lefthand.com.pl/
 BuildRequires:	autoconf
 BuildRequires:	automake
