@@ -1,12 +1,14 @@
 # TODO:
 # - desc and group
 # - patch mod_coffice to work properly with our apache (auth)
+# - move some files from /etc/httpd
 
 %define         arname          mod_coffice
 %define         mod_name        coffice
 %define         apxs            /usr/sbin/apxs
 %define         _pkglibdir      %(%{apxs} -q LIBEXECDIR)
 %define         _sysconfdir     /etc/httpd
+%define		_noautocompressdoc	*.sql *.pl Makefile Makefile.in
 
 Summary:	LeftHand 1.0 Platform
 Summary(pl):	Platforma LeftHand 1.0
@@ -101,9 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-#%doc ChangeLog README
+%doc sql
 %attr(755,postgres,postgres) %{_libdir}/co/fsql_catalog.so
 %{_sysconfdir}/co_javascript/*.js
 %{_sysconfdir}/co_modules/*.so
 %{_pkglibdir}/*.so
-%{_sysconfdir}/%{arname}.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{arname}.conf
