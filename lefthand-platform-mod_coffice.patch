@@ -1,0 +1,124 @@
+diff -urN co.orig/coffice/mod_coffice.c co/coffice/mod_coffice.c
+--- co.orig/coffice/mod_coffice.c	Fri Feb 14 11:11:49 2003
++++ co/coffice/mod_coffice.c	Mon Mar 17 18:41:25 2003
+@@ -941,6 +941,20 @@
+     return result;
+ }
+ 
++typedef struct {
++    int auth_cocontrol;
++    int auth_authoritative;
++} co_auth_config_rec;
++
++static void *create_co_auth_dir_config(pool *p, char *d)
++{
++    co_auth_config_rec *sec
++    = (co_auth_config_rec *) ap_pcalloc(p, sizeof(co_auth_config_rec));
++    sec->auth_cocontrol = 0;
++    sec->auth_authoritative = 1;	/* fortress is secure by default */
++    return sec;
++}
++
+ static int coffice_validate_user(request_rec *r)
+ {
+     char *sent_pw, *real_pw;
+@@ -949,6 +963,12 @@
+     //int id_preference;
+     PGresult *pgres;
+     co_context *ctx; /* here we create co context */
++    int auth_failed = 0;
++    
++    co_auth_config_rec *sec = 
++	(co_auth_config_rec*) ap_get_module_config(r->per_dir_config, &coffice_module);
++
++    if (!(sec->auth_cocontrol)) return DECLINED;
+ 
+     if ((res = ap_get_basic_auth_pw(r, (const char **)&sent_pw)))
+         return res;
+@@ -964,31 +984,36 @@
+     if (PQresultStatus(pgres) != PGRES_TUPLES_OK)
+     {
+         PQclear(pgres);
+-        return AUTH_REQUIRED;
++        auth_failed = 1;
+     }
+-    if (PQntuples(pgres)==0) {
++    else if (PQntuples(pgres)==0) {
+         PQclear(pgres);
+-        return FORBIDDEN;
++        auth_failed = 1;
+     }
+-    if (PQntuples(pgres)!=1) {
++    else if (PQntuples(pgres)!=1) {
+         PQclear(pgres);
+-        return PRECONDITION_FAILED;
++        auth_failed = 1;
+     }
+-    real_pw = PQgetvalue(pgres, 0, 1);
++    if (auth_failed == 0)
++    {
++        real_pw = PQgetvalue(pgres, 0, 1);
+ 
+-    if (strncmp(real_pw,"$1$", 3)) {
+-		/* malformed user.passwd or no passwd */
+-        PQclear(pgres);
+-        return FORBIDDEN;
++        if (strncmp(real_pw,"$1$", 3)) {
++    		/* malformed user.passwd or no passwd */
++	    PQclear(pgres);
++    	    auth_failed = 1;
++        }
++	else if(strcmp(real_pw,crypt(sent_pw,real_pw))) {
++	    ap_log_rerror(APLOG_MARK, APLOG_INFO, r, "User %s: password mismatch",user);
++    	//log_reason (pg_errstr, r->uri, r);
++    	    ap_note_basic_auth_failure (r);
++            PQclear(pgres);
++    	    auth_failed = 1;
++        }
+     }
++    if ((auth_failed == 1) && !(sec->auth_authoritative)) return DECLINED;
++    if ((auth_failed == 1) && (sec->auth_authoritative)) return AUTH_REQUIRED;
+ 
+-    if(strcmp(real_pw,crypt(sent_pw,real_pw))) {
+-        ap_log_rerror(APLOG_MARK, APLOG_INFO, r, "User %s: password mismatch",user);
+-        //log_reason (pg_errstr, r->uri, r);
+-        ap_note_basic_auth_failure (r);
+-        PQclear(pgres);
+-        return FORBIDDEN;
+-    }
+     /* we have user found in database and the password is correct */
+ 
+     /* set authentication info */
+@@ -1298,6 +1323,14 @@
+         FLAG,
+         "JavaScript engine is loaded into every server process if set (On - Off)"
+     },
++    {"AuthenticationCO", ap_set_flag_slot,
++     (void *) XtOffsetOf(co_auth_config_rec, auth_cocontrol),
++     OR_AUTHCFG, FLAG,
++     "Set to 'on' to allow access control by CO"},
++    {"COAuthoritative", ap_set_flag_slot,
++     (void *) XtOffsetOf(co_auth_config_rec, auth_authoritative),
++     OR_AUTHCFG, FLAG,
++     "Set to 'off' to allow access control pass to lower modules"},
+     {NULL}
+ };
+ 
+@@ -1311,7 +1344,7 @@
+ module MODULE_VAR_EXPORT coffice_module = {
+     STANDARD_MODULE_STUFF, 
+     coffice_init,          /* module initializer                  */
+-    NULL,                  /* create per-dir    config structures */
++    create_co_auth_dir_config, /* create per-dir    config structures */
+     NULL,                  /* merge  per-dir    config structures */
+     coffice_sconf_create,  /* create per-server config structures */
+     NULL,                  /* merge  per-server config structures */
+@@ -1319,7 +1352,7 @@
+     coffice_handlers,      /* [#8] MIME-typed-dispatched handlers */
+     NULL,                  /* [#1] URI to filename translation    */
+     coffice_validate_user, /* [#4] validate user id from request  */
+-    NULL,                  /* [#5] check if the user is ok _here_ */
++    NULL,		   /* [#5] check if the user is ok _here_ */
+     NULL,                  /* [#3] check access by host address   */
+     NULL,                  /* [#6] determine MIME type            */
+     NULL,                  /* [#7] pre-run fixups                 */
