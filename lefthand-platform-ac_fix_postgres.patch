@@ -1,0 +1,24 @@
+diff -urN co.orig/configure.in co/configure.in
+--- co.orig/configure.in	Thu Aug 31 12:37:00 2000
++++ co/configure.in	Sat Mar 15 14:07:54 2003
+@@ -287,20 +287,6 @@
+    AC_MSG_ERROR([*** JavaScript 1.5 is required. Check if you do not have other implementation in system. ***.]),
+    AC_MSG_RESULT(assuming not on target machine))
+ 
+-AC_MSG_CHECKING(PostgreSQL version)
+-CPPFLAGS="$CPPFLAGS -I$PGSRCDIR/include"
+-export CPPFLAGS
+-AC_TRY_RUN([#include "version.h"
+-/* required version of PostgreSQL is 7.0.x */
+-main() {
+-    if (strcmp(PG_RELEASE,"7")) exit(-1);
+-    if (strcmp(PG_VERSION,"0")) exit(-1);
+-    exit(0);
+-}],
+-   AC_MSG_RESULT(PostgreSQL 7.0 include files found),
+-   AC_MSG_ERROR([*** PostgreSQL 7.0 is required to build this software ***.]),
+-   AC_MSG_RESULT(assuming not on target machine))
+-
+ AC_OUTPUT([coffice/Makefile
+     comodules/Makefile
+     comodules/Makefile.rules 
