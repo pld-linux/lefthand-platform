@@ -15,7 +15,7 @@ Name:		lefthand-platform
 Version:	1.1
 Release:	0.3
 License:	GPL
-Group:		niewiem
+Group:		Applications/WWW
 # extracted from
 # http://www.lefthand.com.pl/download/firma/lefthand-1.1-all.tar.gz
 Source0:	lefthand-%{version}.tar.gz
@@ -32,13 +32,13 @@ BuildRequires:	apache(EAPI)-devel >= 1.3.12
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	js-devel
-BuildRequires:	postgresql-devel
 BuildRequires:	postgresql-backend-devel
+BuildRequires:	postgresql-devel
 BuildRequires:	texinfo
-PreReq:		apache(EAPI) >= 1.3.12
 Requires(post,preun):	%{apxs}
 Requires(post,preun):	grep
 Requires(preun):	fileutils
+Requires:	apache(EAPI) >= 1.3.12
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -92,7 +92,7 @@ install coffice/mod_coffice.so $RPM_BUILD_ROOT%{_pkglibdir}
 install config/co.conf $RPM_BUILD_ROOT%{_sysconfdir}/%{arname}.conf
 install include/*.h $RPM_BUILD_ROOT%{_includedir}/co
 cp -a http_root/* $RPM_BUILD_ROOT/opt/co/html
-cd $RPM_BUILD_ROOT/etc/httpd
+cd $RPM_BUILD_ROOT%{_sysconfdir}
 ln -sf ../../opt/co/html co_root
 ln -sf ../../opt/co/datafiles co_data
 
@@ -133,7 +133,7 @@ fi
 %{_sysconfdir}/co_root
 %{_sysconfdir}/co_data
 %{_pkglibdir}/*.so
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/%{arname}.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{arname}.conf
 # FIXME: FHS
 #/sql
 %{_includedir}/co
