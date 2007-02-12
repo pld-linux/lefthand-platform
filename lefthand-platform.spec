@@ -10,7 +10,7 @@
 %define		_sysconfdir	/etc/httpd
 
 Summary:	LeftHand 1.1 Platform
-Summary(pl):	Platforma LeftHand 1.1
+Summary(pl.UTF-8):   Platforma LeftHand 1.1
 Name:		lefthand-platform
 Version:	1.1
 Release:	0.3
@@ -48,12 +48,12 @@ platform provides features like database access, Internet
 communication layer, users and roles system and security control
 mechanisms.
 
-%description -l pl
-Platforma LeftHand 1.1 - zestaw bibliotek, narzêdzi i metodologii do
-tworzenia w³a¶ciwych aplikacji, typu aplikacja Firma. Platforma
-zapewnia takie elementy jak, na przyk³ad, dostêp do bazy danych,
-warstwê komunikacji przez Internet, system u¿ytkowników i ról, czy
-mechanizmy kontroli bezpieczeñstwa.
+%description -l pl.UTF-8
+Platforma LeftHand 1.1 - zestaw bibliotek, narzÄ™dzi i metodologii do
+tworzenia wÅ‚aÅ›ciwych aplikacji, typu aplikacja Firma. Platforma
+zapewnia takie elementy jak, na przykÅ‚ad, dostÄ™p do bazy danych,
+warstwÄ™ komunikacji przez Internet, system uÅ¼ytkownikÃ³w i rÃ³l, czy
+mechanizmy kontroli bezpieczeÅ„stwa.
 
 %prep
 %setup -q -n co
