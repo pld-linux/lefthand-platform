@@ -10,7 +10,7 @@
 %define		_sysconfdir	/etc/httpd
 
 Summary:	LeftHand 1.1 Platform
-Summary(pl.UTF-8):   Platforma LeftHand 1.1
+Summary(pl.UTF-8):	Platforma LeftHand 1.1
 Name:		lefthand-platform
 Version:	1.1
 Release:	0.3
